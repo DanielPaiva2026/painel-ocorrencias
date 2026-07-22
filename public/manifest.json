@@ -1,0 +1,21 @@
+{
+  "name": "Ocorrências App",
+  "short_name": "Ocorrências",
+  "description": "Sistema Operacional de Escalas e Ocorrências",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

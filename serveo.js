@@ -1,0 +1,1 @@
+const { spawn } = require('child_process'); const ls = spawn('ssh', ['-R', '80:localhost:3000', 'serveo.net', '-o', 'StrictHostKeyChecking=no']); ls.stdout.on('data', data => require('fs').appendFileSync('serveo.txt', data)); ls.stderr.on('data', data => require('fs').appendFileSync('serveo.txt', data));
