@@ -18,7 +18,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? `http://${window.location.hostname}:3001` : 'http://127.0.0.1:3001');
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://ocorencia-alpiserra-api-ocorrencia.lmfl6n.easypanel.host';
       const response = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

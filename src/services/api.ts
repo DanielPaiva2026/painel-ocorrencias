@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://app.alpiserra.com.br/backend';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ocorencia-alpiserra-api-ocorrencia.lmfl6n.easypanel.host';
 
 export type Colaborador = {
   id: string;
