@@ -208,9 +208,60 @@ export default function FeriasPage() {
         </div>
       </div>
 
-
-
-      {isWizardOpen && (
+      {/* Tabela Geral de Férias */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+        <div className="p-4 border-b border-slate-100 bg-slate-50 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <h3 className="font-bold text-slate-800">Tabela de Férias</h3>
+          <input 
+            type="text" 
+            placeholder="Buscar colaborador..." 
+            className="w-full sm:w-64 px-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50 border-b border-slate-200">
+                <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Matrícula</th>
+                <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Colaborador</th>
+                <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Último Aquisitivo</th>
+                <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Vencimento</th>
+                <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Limite P/ Férias</th>
+                <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Ação</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filteredColaboradores.map(colab => (
+                <tr key={colab.id} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="p-4 text-sm text-slate-600">{colab.matricula || '-'}</td>
+                  <td className="p-4 font-semibold text-slate-800">{colab.nome}</td>
+                  <td className="p-4 text-sm text-slate-600">{colab.ferias_ultimo_aquisitivo || '-'}</td>
+                  <td className="p-4 text-sm text-slate-600">{colab.ferias_vencimento || '-'}</td>
+                  <td className="p-4 text-sm font-medium text-amber-600">{colab.ferias_limite_entrada || '-'}</td>
+                  <td className="p-4 text-right">
+                    <button 
+                      onClick={() => {
+                        setSelectedColabId(colab.id);
+                        setIsWizardOpen(true);
+                      }}
+                      className="text-xs font-medium bg-brand-cyan/10 text-brand-cyan hover:bg-brand-cyan hover:text-white px-3 py-1.5 rounded-lg transition-colors"
+                    >
+                      Lançar Férias
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {filteredColaboradores.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="p-8 text-center text-slate-500">Nenhum colaborador encontrado.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>      {isWizardOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsWizardOpen(false)} />
           <div className="glass-panel w-full max-w-md p-6 rounded-2xl relative z-10 shadow-2xl animate-in fade-in zoom-in-95 duration-200 bg-white">
