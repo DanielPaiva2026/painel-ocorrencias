@@ -14,6 +14,7 @@ export default function UsuariosPage() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('mudar@123');
   const [role, setRole] = useState('OPERACIONAL');
+  const [telefoneWhatsapp, setTelefoneWhatsapp] = useState('');
 
   useEffect(() => {
     loadUsuarios();
@@ -34,11 +35,12 @@ export default function UsuariosPage() {
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     try {
-      await api.createUsuario({ nome, email, senha, role });
+      await api.createUsuario({ nome, email, senha, role, telefone_whatsapp: telefoneWhatsapp });
       setShowModal(false);
       setNome('');
       setEmail('');
       setRole('OPERACIONAL');
+      setTelefoneWhatsapp('');
       loadUsuarios();
     } catch (error) {
       alert('Erro ao criar usuário. O email pode já estar em uso.');
@@ -59,9 +61,11 @@ export default function UsuariosPage() {
   const roleColors: Record<string, string> = {
     'ADMIN': 'bg-brand-blue text-white',
     'GERENCIA': 'bg-purple-600 text-white',
+    'COORDENADOR': 'bg-indigo-600 text-white',
     'RH': 'bg-pink-600 text-white',
     'DP': 'bg-rose-600 text-white',
     'SUPERVISOR': 'bg-brand-teal text-white',
+    'TEC_SEGURANCA': 'bg-orange-500 text-white',
     'OPERACIONAL': 'bg-slate-200 text-slate-700',
     'CLIENTE': 'bg-amber-100 text-amber-800'
   };
@@ -69,9 +73,11 @@ export default function UsuariosPage() {
   const roleIcons: Record<string, any> = {
     'ADMIN': Shield,
     'GERENCIA': Briefcase,
+    'COORDENADOR': Briefcase,
     'RH': Users,
     'DP': Briefcase,
     'SUPERVISOR': Briefcase,
+    'TEC_SEGURANCA': Shield,
     'OPERACIONAL': User,
     'CLIENTE': Building
   };
@@ -103,6 +109,7 @@ export default function UsuariosPage() {
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Nome</th>
                 <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">E-mail</th>
+                <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">WhatsApp</th>
                 <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Perfil</th>
                 <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Última Troca de Senha</th>
                 <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Ações</th>
@@ -115,6 +122,7 @@ export default function UsuariosPage() {
                   <tr key={u.id} className="border-b border-slate-100 hover:bg-slate-50/50">
                     <td className="p-4 font-semibold text-slate-800">{u.nome}</td>
                     <td className="p-4 text-slate-600 text-sm">{u.email}</td>
+                    <td className="p-4 text-slate-600 text-sm">{u.telefone_whatsapp || '-'}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold tracking-wider ${roleColors[u.role]}`}>
                         <RoleIcon className="w-3 h-3" /> {u.role}
@@ -160,13 +168,19 @@ export default function UsuariosPage() {
                 <p className="text-[10px] text-slate-400 mt-1">O usuário será obrigado a trocar esta senha no primeiro login.</p>
               </div>
               <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">WhatsApp (DDD + Número)</label>
+                <input type="text" value={telefoneWhatsapp} onChange={e => setTelefoneWhatsapp(e.target.value)} placeholder="Ex: 24999999999" className="w-full border rounded-xl px-3 py-2 text-sm focus:border-brand-teal focus:ring-1 focus:ring-brand-teal outline-none" />
+              </div>
+              <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Perfil de Acesso</label>
                 <select value={role} onChange={e => setRole(e.target.value)} className="w-full border rounded-xl px-3 py-2 text-sm focus:border-brand-teal focus:ring-1 focus:ring-brand-teal outline-none bg-white">
                   <option value="OPERACIONAL">OPERACIONAL (Padrão)</option>
                   <option value="SUPERVISOR">SUPERVISOR</option>
+                  <option value="COORDENADOR">COORDENADOR</option>
                   <option value="GERENCIA">GERENCIA</option>
                   <option value="RH">RH</option>
                   <option value="DP">DP</option>
+                  <option value="TEC_SEGURANCA">TEC. SEGURANÇA</option>
                   <option value="CLIENTE">CLIENTE</option>
                   <option value="ADMIN">ADMIN</option>
                 </select>
