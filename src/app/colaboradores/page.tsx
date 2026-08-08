@@ -111,6 +111,8 @@ export default function ColabsPage() {
   const [expandedTreinamento, setExpandedTreinamento] = useState<string | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalHistoricoOpen, setIsModalHistoricoOpen] = useState(false);
+  const [historicoManual, setHistoricoManual] = useState({ tipo: 'Falta', data: '', sancao: 'Nenhuma', observacao: '' });
   const [userProfile, setUserProfile] = useState('');
 
   const loadColabs = async () => {
@@ -188,7 +190,33 @@ export default function ColabsPage() {
     }
   };
 
+  const handleSaveHistoricoManual = async () => {
+    if (!selectedColab || !historicoManual.data) return alert('Preencha a data.');
+    const ok = await api.createOcorrencia({
+      colab_id: selectedColab.id,
+      tipo: historicoManual.tipo,
+      data: historicoManual.data,
+      sancao: historicoManual.sancao,
+      observacao: historicoManual.observacao,
+      resolvido: true,
+      origem: 'SISTEMA_MANUAL'
+    });
+    if (ok) {
+      alert('Histórico adicionado!');
+      setIsModalHistoricoOpen(false);
+      setHistoricoManual({ tipo: 'Falta', data: '', sancao: 'Nenhuma', observacao: '' });
+      loadColabs();
+      // Auto-update selectedColab from new list will happen if they close and reopen, 
+      // but to see instantly, we'd need to re-fetch selectedColab.
+    } else {
+      alert('Erro ao salvar histórico.');
+    }
+  };
+
   const canEditTreinamento = ['ADMIN', 'RH', 'DP', 'SEGURANÇA DO TRABALHO', 'SEG. DO TRABALHO'].includes(userProfile.toUpperCase());
+  const canEditCadastral = ['ADMIN', 'RH', 'DP'].includes(userProfile.toUpperCase());
+  const canEditContrato = ['ADMIN', 'RH', 'DP'].includes(userProfile.toUpperCase());
+  const canEditOcorrencia = ['ADMIN', 'GERENCIA', 'COORDENADOR', 'COORDENADOR ADMINISTRATIVO'].includes(userProfile.toUpperCase());
 
 
   const getSanctionsByTipo = (tipos: string | string[]) => {
@@ -345,28 +373,28 @@ export default function ColabsPage() {
             {expandedSection === 'pessoal' && (
               <div className="p-6 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                  <EditableField label="Nome Completo" value={selectedColab.nome} onChange={(v: any) => setSelectedColab({...selectedColab, nome: v})} onBlur={() => handleUpdateField('nome', selectedColab.nome)} className="md:col-span-12 lg:col-span-8" />
-                  <EditableField label="RG" value={selectedColab.rg} onChange={(v: any) => setSelectedColab({...selectedColab, rg: v})} onBlur={() => handleUpdateField('rg', selectedColab.rg)} className="md:col-span-6 lg:col-span-4" />
-                  <EditableField label="CPF" value={selectedColab.cpf} onChange={(v: any) => setSelectedColab({...selectedColab, cpf: v})} onBlur={() => handleUpdateField('cpf', selectedColab.cpf)} className="md:col-span-6 lg:col-span-4" />
-                  <EditableField label="CTPS" value={selectedColab.ctps} onChange={(v: any) => setSelectedColab({...selectedColab, ctps: v})} onBlur={() => handleUpdateField('ctps', selectedColab.ctps)} className="md:col-span-6 lg:col-span-4" />
+                  <EditableField label="Nome Completo" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.nome} onChange={(v: any) => setSelectedColab({...selectedColab, nome: v})} onBlur={() => handleUpdateField('nome', selectedColab.nome)} className="md:col-span-12 lg:col-span-8" />
+                  <EditableField label="RG" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.rg} onChange={(v: any) => setSelectedColab({...selectedColab, rg: v})} onBlur={() => handleUpdateField('rg', selectedColab.rg)} className="md:col-span-6 lg:col-span-4" />
+                  <EditableField label="CPF" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.cpf} onChange={(v: any) => setSelectedColab({...selectedColab, cpf: v})} onBlur={() => handleUpdateField('cpf', selectedColab.cpf)} className="md:col-span-6 lg:col-span-4" />
+                  <EditableField label="CTPS" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.ctps} onChange={(v: any) => setSelectedColab({...selectedColab, ctps: v})} onBlur={() => handleUpdateField('ctps', selectedColab.ctps)} className="md:col-span-6 lg:col-span-4" />
                   
                   <div className="md:col-span-12 lg:col-span-8 flex flex-col md:flex-row gap-4">
                     <div className="flex flex-1 gap-2">
-                      <EditableField label="Telefone Celular" value={selectedColab.telefone_principal} onChange={(v: any) => setSelectedColab({...selectedColab, telefone_principal: v})} onBlur={() => handleUpdateField('telefone_principal', selectedColab.telefone_principal)} className="flex-1" />
-                      <EditableField label="WhatsApp?" type="checkbox" value={selectedColab.is_whatsapp} onChange={(v: any) => handleUpdateField('is_whatsapp', v)} />
+                      <EditableField label="Telefone Celular" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.telefone_principal} onChange={(v: any) => setSelectedColab({...selectedColab, telefone_principal: v})} onBlur={() => handleUpdateField('telefone_principal', selectedColab.telefone_principal)} className="flex-1" />
+                      <EditableField label="WhatsApp?" type="checkbox" disabled={!canEditCadastral} value={selectedColab.is_whatsapp} onChange={(v: any) => handleUpdateField('is_whatsapp', v)} />
                     </div>
-                    <EditableField label="Telefone Secundário (Recado)" value={selectedColab.telefone_secundario} onChange={(v: any) => setSelectedColab({...selectedColab, telefone_secundario: v})} onBlur={() => handleUpdateField('telefone_secundario', selectedColab.telefone_secundario)} className="flex-1" />
+                    <EditableField label="Telefone Secundário (Recado)" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.telefone_secundario} onChange={(v: any) => setSelectedColab({...selectedColab, telefone_secundario: v})} onBlur={() => handleUpdateField('telefone_secundario', selectedColab.telefone_secundario)} className="flex-1" />
                   </div>
 
-                  <EditableField label="Logradouro" value={selectedColab.logradouro} onChange={(v: any) => setSelectedColab({...selectedColab, logradouro: v})} onBlur={() => handleUpdateField('logradouro', selectedColab.logradouro)} className="md:col-span-8 lg:col-span-6" />
-                  <EditableField label="Número" value={selectedColab.numero} onChange={(v: any) => setSelectedColab({...selectedColab, numero: v})} onBlur={() => handleUpdateField('numero', selectedColab.numero)} className="md:col-span-4 lg:col-span-2" />
-                  <EditableField label="Bairro" value={selectedColab.bairro} onChange={(v: any) => setSelectedColab({...selectedColab, bairro: v})} onBlur={() => handleUpdateField('bairro', selectedColab.bairro)} className="md:col-span-6 lg:col-span-4" />
+                  <EditableField label="Logradouro" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.logradouro} onChange={(v: any) => setSelectedColab({...selectedColab, logradouro: v})} onBlur={() => handleUpdateField('logradouro', selectedColab.logradouro)} className="md:col-span-8 lg:col-span-6" />
+                  <EditableField label="Número" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.numero} onChange={(v: any) => setSelectedColab({...selectedColab, numero: v})} onBlur={() => handleUpdateField('numero', selectedColab.numero)} className="md:col-span-4 lg:col-span-2" />
+                  <EditableField label="Bairro" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.bairro} onChange={(v: any) => setSelectedColab({...selectedColab, bairro: v})} onBlur={() => handleUpdateField('bairro', selectedColab.bairro)} className="md:col-span-6 lg:col-span-4" />
                   
-                  <EditableField label="Cidade" value={selectedColab.cidade} onChange={(v: any) => setSelectedColab({...selectedColab, cidade: v})} onBlur={() => handleUpdateField('cidade', selectedColab.cidade)} className="md:col-span-6 lg:col-span-5" />
+                  <EditableField label="Cidade" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.cidade} onChange={(v: any) => setSelectedColab({...selectedColab, cidade: v})} onBlur={() => handleUpdateField('cidade', selectedColab.cidade)} className="md:col-span-6 lg:col-span-5" />
                   
                   <div className="md:col-span-6 lg:col-span-7 flex gap-4">
-                    <EditableField label="UF" value={selectedColab.uf} onChange={(v: any) => setSelectedColab({...selectedColab, uf: v})} onBlur={() => handleUpdateField('uf', selectedColab.uf)} className="w-20" />
-                    <EditableField label="CEP" value={selectedColab.cep} onChange={(v: any) => setSelectedColab({...selectedColab, cep: v})} onBlur={() => handleUpdateField('cep', selectedColab.cep)} className="w-32" />
+                    <EditableField label="UF" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.uf} onChange={(v: any) => setSelectedColab({...selectedColab, uf: v})} onBlur={() => handleUpdateField('uf', selectedColab.uf)} className="w-20" />
+                    <EditableField label="CEP" type={canEditCadastral ? 'text' : 'readonly'} value={selectedColab.cep} onChange={(v: any) => setSelectedColab({...selectedColab, cep: v})} onBlur={() => handleUpdateField('cep', selectedColab.cep)} className="w-32" />
                   </div>
                 </div>
               </div>
@@ -391,11 +419,11 @@ export default function ColabsPage() {
                      <EditableField label="Horas Contratadas" type="number" value={selectedColab.horas_contratadas} onChange={(v: any) => setSelectedColab({...selectedColab, horas_contratadas: v})} onBlur={() => handleUpdateField('horas_contratadas', selectedColab.horas_contratadas)} />
                   )}
 
-                  <EditableField label="Cargo (Função)" value={selectedColab.papel} onChange={(v: any) => setSelectedColab({...selectedColab, papel: v})} onBlur={() => handleUpdateField('papel', selectedColab.papel)} />
-                  <EditableField label="Data de Admissão (DD/MM/AAAA)" value={selectedColab.admissao} onChange={(v: any) => setSelectedColab({...selectedColab, admissao: v})} onBlur={() => handleUpdateField('admissao', selectedColab.admissao)} />
+                  <EditableField label="Cargo (Função)" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.papel} onChange={(v: any) => setSelectedColab({...selectedColab, papel: v})} onBlur={() => handleUpdateField('papel', selectedColab.papel)} />
+                  <EditableField label="Data de Admissão (DD/MM/AAAA)" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.admissao} onChange={(v: any) => setSelectedColab({...selectedColab, admissao: v})} onBlur={() => handleUpdateField('admissao', selectedColab.admissao)} />
                   
-                  <EditableField label="1ª Experiência" type="readonly" value={selectedColab.experiencia_1} />
-                  <EditableField label="2ª Experiência" type="readonly" value={selectedColab.experiencia_2} />
+                  <EditableField label="1ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_1} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_1: v})} onBlur={() => handleUpdateField('experiencia_1', selectedColab.experiencia_1)} />
+                  <EditableField label="2ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_2} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_2: v})} onBlur={() => handleUpdateField('experiencia_2', selectedColab.experiencia_2)} />
                 </div>
               </div>
             )}
@@ -534,6 +562,11 @@ export default function ColabsPage() {
             </button>
             {expandedSection === 'corretivo' && (
               <div className="p-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                 {canEditOcorrencia && (
+                   <div className="flex justify-end mb-4">
+                     <button onClick={() => setIsModalHistoricoOpen(true)} className="bg-brand-teal text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-brand-teal/90">+ Adicionar Histórico Manual</button>
+                   </div>
+                 )}
                  {renderOcorrenciasAccordion(['Atraso', 'Sair mais cedo', 'Saída Antecipada'], 'Não cumprimento de Horário')}
                  {renderOcorrenciasAccordion('Falta', 'Falta não Justificada')}
                  {renderOcorrenciasAccordion('Desacato ou Desrespeito', 'Desacato ou Desrespeito')}
@@ -541,6 +574,45 @@ export default function ColabsPage() {
               </div>
             )}
           </div>
+
+          {/* Modal Historico Manual */}
+          {isModalHistoricoOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
+                <h3 className="text-xl font-bold text-slate-800 mb-4">Adicionar Histórico Corretivo (Manual)</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tipo de Ocorrência</label>
+                    <select className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm" value={historicoManual.tipo} onChange={e => setHistoricoManual({...historicoManual, tipo: e.target.value})}>
+                      <option>Falta</option>
+                      <option>Atraso</option>
+                      <option>Saída Antecipada</option>
+                      <option>Sair mais cedo</option>
+                      <option>Desacato ou Desrespeito</option>
+                      <option>Descumprimento do manual de Conduta</option>
+                    </select>
+                  </div>
+                  <EditableField label="Data (DD/MM/AAAA) ou (AAAA-MM-DD)" value={historicoManual.data} onChange={(v: string) => setHistoricoManual({...historicoManual, data: v})} />
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Sanção Aplicada</label>
+                    <select className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm" value={historicoManual.sancao} onChange={e => setHistoricoManual({...historicoManual, sancao: e.target.value})}>
+                      <option>Nenhuma</option>
+                      <option>Advertência Escrita</option>
+                      <option>Suspensão 1 Dia</option>
+                      <option>Suspensão 2 Dias</option>
+                      <option>Suspensão 3 Dias</option>
+                      <option>Justa Causa</option>
+                    </select>
+                  </div>
+                  <EditableField label="Observações (Opcional)" value={historicoManual.observacao} onChange={(v: string) => setHistoricoManual({...historicoManual, observacao: v})} />
+                </div>
+                <div className="flex justify-end gap-3 mt-6">
+                  <button onClick={() => setIsModalHistoricoOpen(false)} className="px-4 py-2 text-slate-500 font-bold hover:bg-slate-100 rounded-lg transition-colors">Cancelar</button>
+                  <button onClick={handleSaveHistoricoManual} className="bg-brand-teal text-white px-6 py-2 rounded-lg font-bold hover:bg-brand-teal/90 transition-colors">Salvar Histórico</button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Accordion 5 - POSTO DE TRABALHO & DISPONIBILIDADE */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
