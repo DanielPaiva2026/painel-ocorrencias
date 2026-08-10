@@ -150,11 +150,11 @@ export default function ColabsPage() {
 
     // Auto calculate Reciclagens
     if (field === 'manual_conduta_data') updatedData.manual_conduta_reciclagem = addDays(value, 365);
-    if (field === 'seguranca_medicina_data') updatedData.seguranca_medicina_reciclagem = addDays(value, 180);
+    if (field === 'seguranca_medicina_data') updatedData.seguranca_medicina_reciclagem = addDays(value, 365);
     if (field === 'treino_basico_data') updatedData.treino_basico_reciclagem = addDays(value, 365);
     if (field === 'data_nr32') updatedData.reciclagem_nr32 = addDays(value, 365);
     if (field === 'data_nr35') updatedData.reciclagem_nr35 = addDays(value, 365);
-    if (field === 'data_aso') updatedData.reciclagem_aso = addMonths(value, 6);
+    if (field === 'data_aso') updatedData.reciclagem_aso = addDays(value, 365);
     if (field === 'exame_complementar_data') updatedData.exame_complementar_retorno = addMonths(value, 24);
 
     // Auto calculate Experiência (removido a pedido do usuário, agora apenas exibe o do banco)
@@ -170,11 +170,11 @@ export default function ColabsPage() {
     let updatedData = { ...selectedColab, [field]: value };
     if (field === 'data_integracao') updatedData.reciclagem_integracao = addDays(value, 365);
     if (field === 'manual_conduta_data') updatedData.manual_conduta_reciclagem = addDays(value, 365);
-    if (field === 'seguranca_medicina_data') updatedData.seguranca_medicina_reciclagem = addDays(value, 180);
+    if (field === 'seguranca_medicina_data') updatedData.seguranca_medicina_reciclagem = addDays(value, 365);
     if (field === 'treino_basico_data') updatedData.treino_basico_reciclagem = addDays(value, 365);
     if (field === 'data_nr32') updatedData.reciclagem_nr32 = addDays(value, 365);
     if (field === 'data_nr35') updatedData.reciclagem_nr35 = addDays(value, 365);
-    if (field === 'data_aso') updatedData.reciclagem_aso = addMonths(value, 6);
+    if (field === 'data_aso') updatedData.reciclagem_aso = addDays(value, 365);
     if (field === 'exame_complementar_data') updatedData.exame_complementar_retorno = addMonths(value, 24);
     setSelectedColab(updatedData);
   };
@@ -463,7 +463,7 @@ export default function ColabsPage() {
                          </div>
                          <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
                             <EditableField label="Segurança e Medicina (DD/MM/AAAA)" mask="date" type={canEditTreinamento ? 'text' : 'readonly'} value={selectedColab.seguranca_medicina_data} onChange={(v: any) => handleTreinamentoChange('seguranca_medicina_data', v)} />
-                            <div className="mt-2"><EditableField label="Reciclagem (+180)" type="readonly" value={selectedColab.seguranca_medicina_reciclagem} /></div>
+                            <div className="mt-2"><EditableField label="Reciclagem (+365)" type="readonly" value={selectedColab.seguranca_medicina_reciclagem} /></div>
                          </div>
                          <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
                             <EditableField label="Treino Básico Op. (DD/MM/AAAA)" mask="date" type={canEditTreinamento ? 'text' : 'readonly'} value={selectedColab.treino_basico_data} onChange={(v: any) => handleTreinamentoChange('treino_basico_data', v)} />
@@ -529,7 +529,7 @@ export default function ColabsPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
                             <EditableField label="Exame Admissional (DD/MM/AAAA)" mask="date" type={canEditTreinamento ? 'text' : 'readonly'} value={selectedColab.data_aso} onChange={(v: any) => handleTreinamentoChange('data_aso', v)} />
-                            <div className="mt-2"><EditableField label="Retorno (+6 Meses)" type="readonly" value={selectedColab.reciclagem_aso} /></div>
+                            <div className="mt-2"><EditableField label="Retorno (+365 Dias)" type="readonly" value={selectedColab.reciclagem_aso} /></div>
                          </div>
                          {(selectedColab.requer_nr32 || selectedColab.requer_nr35) && (
                             <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
@@ -655,12 +655,11 @@ export default function ColabsPage() {
                 })()}
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div><label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Situação / Afastamento</label>
-                  <div className="p-3 bg-slate-50 rounded-lg text-slate-800 font-medium">{selectedColab.situacao_disponibilidade || 'Livre'}</div></div>
-                  <div><label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Data de Retorno</label>
-                  <div className="p-3 bg-slate-50 rounded-lg text-slate-800 font-medium">{(selectedColab.situacao_disponibilidade === 'Livre' || selectedColab.situacao_disponibilidade === 'Alocado') ? '-' : (selectedColab.data_retorno || '-')}</div></div>
-                  <div><label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Justificativa</label>
-                  <div className="p-3 bg-slate-50 rounded-lg text-slate-800 font-medium">{selectedColab.justificativa_inativo || selectedColab.observacao_retorno || '-'}</div></div>
+                  <EditableField label="Situação / Afastamento" type={canEditOcorrencia ? 'select' : 'readonly'} options={['Livre', 'Alocado', 'Férias', 'Atestado', 'INSS', 'Licença Maternidade', 'Licença Paternidade']} value={selectedColab.situacao_disponibilidade || 'Livre'} onChange={(v: any) => setSelectedColab({...selectedColab, situacao_disponibilidade: v})} onBlur={() => handleUpdateField('situacao_disponibilidade', selectedColab.situacao_disponibilidade)} />
+                  
+                  <EditableField label="Data de Retorno (DD/MM/AAAA)" mask="date" type={canEditOcorrencia ? 'text' : 'readonly'} value={selectedColab.data_retorno} onChange={(v: any) => setSelectedColab({...selectedColab, data_retorno: v})} onBlur={() => handleUpdateField('data_retorno', selectedColab.data_retorno)} />
+                  
+                  <EditableField label="Justificativa / Motivo" type={canEditOcorrencia ? 'text' : 'readonly'} value={selectedColab.justificativa_inativo || selectedColab.observacao_retorno} onChange={(v: any) => setSelectedColab({...selectedColab, justificativa_inativo: v})} onBlur={() => handleUpdateField('justificativa_inativo', selectedColab.justificativa_inativo)} />
                 </div>
 
                 <h4 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2 mt-4">Alocação Atual (Posto de Trabalho)</h4>
