@@ -419,7 +419,9 @@ export default function ColabsPage() {
                      <EditableField label="Horas Contratadas" type="number" value={selectedColab.horas_contratadas} onChange={(v: any) => setSelectedColab({...selectedColab, horas_contratadas: v})} onBlur={() => handleUpdateField('horas_contratadas', selectedColab.horas_contratadas)} />
                   )}
 
+                  <EditableField label="Nível de Atuação" type={canEditContrato ? 'select' : 'readonly'} options={['Operacional', 'Gestão', 'Administrativo', 'Diretoria']} value={selectedColab.nivel_atuacao || selectedColab.categoria_cargo || ''} onChange={(v: any) => setSelectedColab({...selectedColab, nivel_atuacao: v})} onBlur={() => handleUpdateField('nivel_atuacao', selectedColab.nivel_atuacao)} />
                   <EditableField label="Cargo (Função)" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.papel} onChange={(v: any) => setSelectedColab({...selectedColab, papel: v})} onBlur={() => handleUpdateField('papel', selectedColab.papel)} />
+                  <EditableField label="Categoria do Cargo" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.categoria_cargo} onChange={(v: any) => setSelectedColab({...selectedColab, categoria_cargo: v})} onBlur={() => handleUpdateField('categoria_cargo', selectedColab.categoria_cargo)} />
                   <EditableField label="Data de Admissão (DD/MM/AAAA)" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.admissao} onChange={(v: any) => setSelectedColab({...selectedColab, admissao: v})} onBlur={() => handleUpdateField('admissao', selectedColab.admissao)} />
                   
                   <EditableField label="1ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_1} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_1: v})} onBlur={() => handleUpdateField('experiencia_1', selectedColab.experiencia_1)} />
