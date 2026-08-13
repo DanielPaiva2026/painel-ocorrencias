@@ -222,7 +222,7 @@ export default function FeriasPage() {
             <div className="flex flex-col gap-4">
               <SearchableSelect 
                 label="Selecione o Colaborador"
-                options={colaboradores.map(c => ({ id: c.id, label: c.nome, subLabel: `${c.papel} (${c.turno_base})` }))}
+                options={colaboradores.map(c => ({ id: c.id, label: c.nome, subLabel: `${c.categoria_cargo} (${c.turno_base})` }))}
                 value={selectedColabId}
                 onChange={setSelectedColabId}
                 placeholder="Buscar colaborador..."

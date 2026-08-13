@@ -130,7 +130,7 @@ export default function ColabsPage() {
   const filteredColabs = colaboradores.filter(col => {
     const matchNome = col.nome.toLowerCase().includes(buscaNome.toLowerCase()) || (col.matricula && col.matricula.toLowerCase().includes(buscaNome.toLowerCase()));
     const matchCidade = buscaCidade ? (col.cidade === buscaCidade || col.localizacao === buscaCidade) : true;
-    const matchFuncao = buscaFuncao ? col.papel === buscaFuncao : true;
+    const matchFuncao = buscaFuncao ? col.categoria_cargo === buscaFuncao : true;
     
     // Se a busca estiver vazia, esconder inativos. Se tiver busca, mostrar os inativos que derem match
     const isBuscaAtiva = buscaNome.length > 0 || buscaCidade.length > 0 || buscaFuncao.length > 0;
@@ -141,7 +141,7 @@ export default function ColabsPage() {
   });
 
   const uniqueCidades = Array.from(new Set(colaboradores.map(c => c.cidade || c.localizacao).filter((c): c is string => !!c))).sort();
-  const uniqueFuncoes = Array.from(new Set(colaboradores.map(c => c.papel).filter((c): c is string => !!c))).sort();
+  const uniqueFuncoes = Array.from(new Set(colaboradores.map(c => c.categoria_cargo).filter((c): c is string => !!c))).sort();
 
   const handleUpdateField = async (field: string, value: any) => {
     if (!selectedColab) return;
@@ -419,13 +419,30 @@ export default function ColabsPage() {
                      <EditableField label="Horas Contratadas" type="number" value={selectedColab.horas_contratadas} onChange={(v: any) => setSelectedColab({...selectedColab, horas_contratadas: v})} onBlur={() => handleUpdateField('horas_contratadas', selectedColab.horas_contratadas)} />
                   )}
 
-                  <EditableField label="Nível de Atuação" type={canEditContrato ? 'select' : 'readonly'} options={['Operacional', 'Gestão', 'Administrativo', 'Diretoria']} value={selectedColab.nivel_atuacao || selectedColab.categoria_cargo || ''} onChange={(v: any) => setSelectedColab({...selectedColab, nivel_atuacao: v})} onBlur={() => handleUpdateField('nivel_atuacao', selectedColab.nivel_atuacao)} />
-                  <EditableField label="Cargo (Função)" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.papel} onChange={(v: any) => setSelectedColab({...selectedColab, papel: v})} onBlur={() => handleUpdateField('papel', selectedColab.papel)} />
-                  <EditableField label="Categoria do Cargo" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.categoria_cargo} onChange={(v: any) => setSelectedColab({...selectedColab, categoria_cargo: v})} onBlur={() => handleUpdateField('categoria_cargo', selectedColab.categoria_cargo)} />
-                  <EditableField label="Data de Admissão (DD/MM/AAAA)" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.admissao} onChange={(v: any) => setSelectedColab({...selectedColab, admissao: v})} onBlur={() => handleUpdateField('admissao', selectedColab.admissao)} />
+                  <EditableField label="Cargo (Função)" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.categoria_cargo} onChange={(v: any) => setSelectedColab({...selectedColab, categoria_cargo: v})} onBlur={() => handleUpdateField('categoria_cargo', selectedColab.categoria_cargo)} />
+                  <EditableField label="Data de Admissão (DD/MM/AAAA)" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={
+                    (selectedColab.admissao && selectedColab.admissao.includes('-')) 
+                      ? selectedColab.admissao.split('-').reverse().join('/') 
+                      : selectedColab.admissao
+                  } onChange={(v: any) => setSelectedColab({...selectedColab, admissao: v})} onBlur={() => handleUpdateField('admissao', selectedColab.admissao)} />
                   
-                  <EditableField label="1ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_1} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_1: v})} onBlur={() => handleUpdateField('experiencia_1', selectedColab.experiencia_1)} />
-                  <EditableField label="2ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_2} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_2: v})} onBlur={() => handleUpdateField('experiencia_2', selectedColab.experiencia_2)} />
+                  {(() => {
+                    const exper2 = selectedColab.experiencia_2;
+                    if (!exper2) return null;
+                    const parts = exper2.split('/');
+                    if (parts.length === 3) {
+                      const expDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+                      if (expDate >= new Date(new Date().setHours(0,0,0,0))) {
+                        return (
+                          <>
+                            <EditableField label="1ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_1} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_1: v})} onBlur={() => handleUpdateField('experiencia_1', selectedColab.experiencia_1)} />
+                            <EditableField label="2ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_2} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_2: v})} onBlur={() => handleUpdateField('experiencia_2', selectedColab.experiencia_2)} />
+                          </>
+                        );
+                      }
+                    }
+                    return null;
+                  })()}
                 </div>
               </div>
             )}
@@ -812,7 +829,7 @@ export default function ColabsPage() {
                     </span>
                   )}
                   <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
-                    {col.papel}
+                    {col.categoria_cargo}
                   </span>
                   <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold border ${!col.situacao_disponibilidade || col.situacao_disponibilidade === 'Livre' ? 'bg-green-50 text-green-700 border-green-200' : col.situacao_disponibilidade === 'Alocado' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-orange-50 text-orange-700 border-orange-200'}`}>
                     {col.situacao_disponibilidade || 'Livre'}

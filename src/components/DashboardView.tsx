@@ -247,7 +247,7 @@ export function DashboardView({ data }: { data: any }) {
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
                         <span className="font-semibold text-slate-800">{oc.colab?.nome ?? 'Desconhecido'}</span>
-                        <span className="text-xs text-slate-400">{oc.colab?.papel ?? 'Sem Papel'} • {oc.colab?.turno_base}</span>
+                        <span className="text-xs text-slate-400">{oc.colab?.categoria_cargo ?? 'Sem Papel'} • {oc.colab?.turno_base}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">

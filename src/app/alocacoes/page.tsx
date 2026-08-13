@@ -39,7 +39,7 @@ export default async function AlocacoesPage() {
                   </td>
                   <td className="px-6 py-4 text-slate-600">
                     <span className="inline-flex items-center px-2 py-1 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700">
-                      {alocacao.colab?.papel || 'N/A'}
+                      {alocacao.colab?.categoria_cargo || 'N/A'}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-slate-500">

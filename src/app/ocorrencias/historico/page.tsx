@@ -117,7 +117,7 @@ export default function HistoricoOcorrenciasPage() {
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
                         <span className="font-semibold text-slate-800">{oc.colab?.nome ?? 'Desconhecido'}</span>
-                        <span className="text-xs text-slate-400">{oc.colab?.papel}</span>
+                        <span className="text-xs text-slate-400">{oc.colab?.categoria_cargo}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">

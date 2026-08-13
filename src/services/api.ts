@@ -3,14 +3,13 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ocorencia-alpiserra-
 export type Colaborador = {
   id: string;
   nome: string;
-  papel: string;
+  categoria_cargo: string | null;
   endereco: string;
   turno_base: string;
   status_cadastro: string | null;
   tipo_contratacao: string | null;
   horas_contratadas: string | null;
-  categoria_cargo: string | null;
-  cargo_alterdata: string | null;
+  // categoria_cargo já existe acima
   matricula: string | null;
   ctps: string | null;
   localizacao: string | null;
@@ -133,7 +132,7 @@ export type Ocorrencia = {
   criado_em: string;
   colab?: {
     nome: string;
-    papel: string;
+    categoria_cargo: string | null;
     turno_base: string;
   }
 };
@@ -149,7 +148,7 @@ export type Afastamento = {
   criado_em: string;
   colab?: {
     nome: string;
-    papel: string;
+    categoria_cargo: string | null;
   }
 };
 
@@ -167,7 +166,7 @@ export type ColabLivre = {
 export type Substituto = {
   id: string;
   nome: string;
-  papel: string;
+  categoria_cargo: string | null;
   turno_base: string;
   situacao_disponibilidade: string;
   tipoDisponibilidade: string;
@@ -475,11 +474,11 @@ export const api = {
     }
   },
 
-  getSubstitutos: async (postoId?: string, papel?: string, data?: string, exige_nr32?: boolean, exige_nr35?: boolean): Promise<Substituto[]> => {
+  getSubstitutos: async (postoId?: string, categoria_cargo?: string, data?: string, exige_nr32?: boolean, exige_nr35?: boolean): Promise<Substituto[]> => {
     try {
       const params = new URLSearchParams();
       if (postoId) params.append('posto_id', postoId);
-      if (papel) params.append('papel', papel);
+      if (categoria_cargo) params.append('categoria_cargo', categoria_cargo);
       if (data) params.append('data', data);
       if (exige_nr32) params.append('exige_nr32', 'true');
       if (exige_nr35) params.append('exige_nr35', 'true');

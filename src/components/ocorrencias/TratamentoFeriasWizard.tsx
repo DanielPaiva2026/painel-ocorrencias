@@ -59,7 +59,7 @@ export function TratamentoFeriasWizard({
       setSubstitutoId('');
       setTreinamentoConfirmado(false);
       
-      api.getSubstitutos(vagaAtual.posto_id, colab.papel, new Date(dataAviso).toISOString()).then(data => {
+      api.getSubstitutos(vagaAtual.posto_id, colab.categoria_cargo || undefined, new Date(dataAviso).toISOString(), undefined, undefined).then(data => {
         if (tipoSubstituicao === 'Livre') {
           setCandidatos(data);
         } else {
@@ -69,7 +69,7 @@ export function TratamentoFeriasWizard({
               .map(c => ({
                 id: c.id,
                 nome: c.nome,
-                papel: c.papel,
+                categoria_cargo: c.categoria_cargo,
                 turno_base: c.turno_base,
                 situacao_disponibilidade: c.situacao_disponibilidade || '',
                 tipoDisponibilidade: 'Alocado (' + c.alocacoes![0].posto?.cliente?.nome_razao + ')',
@@ -203,7 +203,7 @@ export function TratamentoFeriasWizard({
                     <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600">{sub.tipoDisponibilidade}</span>
                   </div>
                   <div className="text-xs text-slate-500 mt-1 flex justify-between">
-                    <span>{sub.papel}</span>
+                    <span>{sub.categoria_cargo}</span>
                     {sub.scoreDistancia === 0 && <span className="text-emerald-600 font-medium">Mesma cidade</span>}
                     {sub.scoreDistancia > 0 && <span className="text-amber-600 font-medium flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> Outra cidade</span>}
                   </div>

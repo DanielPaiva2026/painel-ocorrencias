@@ -18,7 +18,7 @@ export function NovoServicoExtra() {
   const [nomeClienteNovo, setNomeClienteNovo] = useState('');
   
   const [tipoServico, setTipoServico] = useState('');
-  const [papelAlvo, setPapelAlvo] = useState('');
+  const [categoriaAlvo, setcategoriaAlvo] = useState('');
   const [dataInicio, setDataInicio] = useState('');
   const [dataFim, setDataFim] = useState('');
   const [quantidadeVagas, setQuantidadeVagas] = useState(1);
@@ -45,7 +45,7 @@ export function NovoServicoExtra() {
     setClienteId('');
     setNomeClienteNovo('');
     setTipoServico('');
-    setPapelAlvo('');
+    setcategoriaAlvo('');
     setDataInicio('');
     setDataFim('');
     setQuantidadeVagas(1);
@@ -87,8 +87,8 @@ export function NovoServicoExtra() {
     if (servico && servico.id) {
       setServicoId(servico.id);
       
-      // Busca disponibilidade filtrando pelos NRs, data informada e papel
-      const disponiveis = await api.getSubstitutos(undefined, papelAlvo, dataInicio, exigeNr32, exigeNr35);
+      // Busca disponibilidade filtrando pelos NRs, data informada e Categoria
+      const disponiveis = await api.getSubstitutos(undefined, categoriaAlvo, dataInicio, exigeNr32, exigeNr35);
       setSubstitutosDisponiveis(disponiveis);
       setStep(2);
     } else {
@@ -193,8 +193,8 @@ export function NovoServicoExtra() {
                   </div>
 
                   <div className="col-span-2 md:col-span-1">
-                    <label className="text-xs font-medium text-slate-500 mb-1 block">Função / Papel Desejado</label>
-                    <input type="text" value={papelAlvo} onChange={(e) => setPapelAlvo(e.target.value)} placeholder="Ex: Porteiro, Servente (Opcional)" className="w-full rounded-xl border border-border-light bg-white px-3 py-2 text-sm outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal" />
+                    <label className="text-xs font-medium text-slate-500 mb-1 block">Função / Categoria Desejado</label>
+                    <input type="text" value={categoriaAlvo} onChange={(e) => setcategoriaAlvo(e.target.value)} placeholder="Ex: Porteiro, Servente (Opcional)" className="w-full rounded-xl border border-border-light bg-white px-3 py-2 text-sm outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal" />
                   </div>
 
                   <div>
@@ -262,7 +262,7 @@ export function NovoServicoExtra() {
                           <div className="flex items-center justify-between">
                             <div>
                               <p className="font-medium text-slate-800 text-sm">{sub.nome}</p>
-                              <p className="text-xs text-slate-500 mt-0.5">{sub.papel} • {sub.tipo_contratacao || 'Não informado'}</p>
+                              <p className="text-xs text-slate-500 mt-0.5">{sub.categoria_cargo} • {sub.tipo_contratacao || 'Não informado'}</p>
                             </div>
                             <div>
                               {isSelected ? (

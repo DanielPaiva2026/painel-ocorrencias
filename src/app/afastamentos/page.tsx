@@ -45,7 +45,7 @@ export default async function AfastamentosPage() {
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
                         <span className="font-semibold text-slate-800">{afast.colab?.nome}</span>
-                        <span className="text-xs text-slate-400">{afast.colab?.papel}</span>
+                        <span className="text-xs text-slate-400">{afast.colab?.categoria_cargo}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">

@@ -110,7 +110,7 @@ export function NovaOcorrencia() {
                 <div className="animate-in fade-in slide-in-from-top-2">
                   <SearchableSelect 
                     label="Colaborador"
-                    options={colabs.map(c => ({ id: c.id, label: c.nome, subLabel: `${c.papel} (${c.turno_base})` }))}
+                    options={colabs.map(c => ({ id: c.id, label: c.nome, subLabel: `${c.categoria_cargo} (${c.turno_base})` }))}
                     value={colabId}
                     onChange={setColabId}
                     placeholder="Selecione um colaborador"
