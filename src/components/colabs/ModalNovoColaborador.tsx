@@ -115,7 +115,7 @@ export default function ModalNovoColaborador({ isOpen, onClose, onSuccess }: Mod
   };
 
   const handleDownloadTemplate = () => {
-    const csvContent = "nome,matricula,papel,turno_base,cep,endereco,horas_contratadas,tipo_contratacao,status_cadastro,admissao,ctps,contrato_experiencia_dias,situacao_disponibilidade,data_retorno,justificativa_inativo,data_integracao,reciclagem_integracao,data_nr32,reciclagem_nr32,data_nr35,reciclagem_nr35,data_aso,reciclagem_aso\nJoão da Silva,1234,PORTEIRO,12x36 Dia,01000-000,Rua Teste 123,44:00,CLT,Ativo,10/05/2023,1234567,45,Disponível,,,,,10/06/2023,,15/06/2023,,20/06/2023,";
+    const csvContent = "nome,matricula,categoria_cargo,turno_base,cep,endereco,horas_contratadas,tipo_contratacao,status_cadastro,admissao,ctps,contrato_experiencia_dias,situacao_disponibilidade,data_retorno,justificativa_inativo,data_integracao,reciclagem_integracao,data_nr32,reciclagem_nr32,data_nr35,reciclagem_nr35,data_aso,reciclagem_aso\nJoão da Silva,1234,PORTEIRO,12x36 Dia,01000-000,Rua Teste 123,44:00,CLT,Ativo,10/05/2023,1234567,45,Disponível,,,,,10/06/2023,,15/06/2023,,20/06/2023,";
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
