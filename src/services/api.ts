@@ -292,11 +292,14 @@ export const api = {
         method: 'POST',
         body: formData,
       });
-      if (!res.ok) throw new Error('Falha no upload do CSV');
-      return res.json();
-    } catch (error) {
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        return { success: false, message: data?.message || 'Falha no upload do CSV' };
+      }
+      return data;
+    } catch (error: any) {
       console.error(error);
-      return null;
+      return { success: false, message: error.message };
     }
   },
 

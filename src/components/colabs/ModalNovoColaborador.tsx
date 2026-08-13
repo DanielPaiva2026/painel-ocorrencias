@@ -110,7 +110,7 @@ export default function ModalNovoColaborador({ isOpen, onClose, onSuccess }: Mod
       onSuccess();
       onClose();
     } else {
-      setError('Erro ao processar planilha. Verifique o formato do CSV.');
+      setError(result?.message || 'Erro ao processar planilha. Verifique o formato do CSV e tente novamente.');
     }
   };
 
