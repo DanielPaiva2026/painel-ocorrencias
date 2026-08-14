@@ -477,7 +477,7 @@ export const api = {
     }
   },
 
-  getSubstitutos: async (postoId?: string, categoria_cargo?: string, data?: string, exige_nr32?: boolean, exige_nr35?: boolean): Promise<Substituto[]> => {
+  getSubstitutos: async (postoId?: string, categoria_cargo?: string, data?: string, exige_nr32?: boolean, exige_nr35?: boolean, cidade_alvo?: string): Promise<Substituto[]> => {
     try {
       const params = new URLSearchParams();
       if (postoId) params.append('posto_id', postoId);
@@ -485,6 +485,7 @@ export const api = {
       if (data) params.append('data', data);
       if (exige_nr32) params.append('exige_nr32', 'true');
       if (exige_nr35) params.append('exige_nr35', 'true');
+      if (cidade_alvo) params.append('cidade_alvo', cidade_alvo);
       
       const res = await fetch(`${API_URL}/disponibilidade/substitutos?${params.toString()}`, { cache: 'no-store' });
       if (!res.ok) return [];

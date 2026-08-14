@@ -46,12 +46,12 @@ export function TratamentoJornadaIncompletaWizard({ colab, onClose, onSuccess }:
       setLoadingCandidatos(true);
       const isoDate = new Date().toISOString();
       const postoIdToUse = alocacaoAtual?.posto_id || undefined;
-      api.getSubstitutos(postoIdToUse, colab.papel, isoDate).then(data => {
+      api.getSubstitutos(postoIdToUse, (colab.categoria_cargo || undefined), isoDate, undefined, undefined, (colab.cidade || undefined)).then(data => {
         setCandidatos(data);
         setLoadingCandidatos(false);
       });
     }
-  }, [precisaCobertura, alocacaoAtual, colab.papel]);
+  }, [precisaCobertura, alocacaoAtual, colab.categoria_cargo]);
 
   const handleSubmit = async () => {
     if (!tipoJornada) {
@@ -100,7 +100,7 @@ export function TratamentoJornadaIncompletaWizard({ colab, onClose, onSuccess }:
         </div>
         <div>
           <h3 className="font-bold text-slate-800 text-sm">{colab.nome}</h3>
-          <p className="text-xs text-slate-500">{colab.papel} • {alocacaoAtual?.posto?.cliente?.nome_razao || 'Sem posto alocado'}</p>
+          <p className="text-xs text-slate-500">{colab.categoria_cargo} • {alocacaoAtual?.posto?.cliente?.nome_razao || 'Sem posto alocado'}</p>
         </div>
       </div>
 

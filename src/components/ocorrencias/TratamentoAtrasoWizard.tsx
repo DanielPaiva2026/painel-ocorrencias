@@ -66,13 +66,13 @@ export function TratamentoAtrasoWizard({ colab, onClose, onSuccess }: Props) {
         
         setLoadingDias(prev => ({ ...prev, [i]: true }));
         const postoIdToUse = alocacaoAtual?.posto_id || undefined;
-        api.getSubstitutos(postoIdToUse, colab.papel, isoDate).then(data => {
+        api.getSubstitutos(postoIdToUse, (colab.categoria_cargo || undefined), isoDate, undefined, undefined, (colab.cidade || undefined)).then(data => {
           setSubstitutosPorDia(prev => ({ ...prev, [i]: data }));
           setLoadingDias(prev => ({ ...prev, [i]: false }));
         });
       }
     }
-  }, [vaiPegarPosto, alocacaoAtual, colab.papel, diasCobertura]);
+  }, [vaiPegarPosto, alocacaoAtual, (colab.categoria_cargo || undefined), diasCobertura]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -200,7 +200,7 @@ export function TratamentoAtrasoWizard({ colab, onClose, onSuccess }: Props) {
           </div>
           <div>
             <h3 className="font-bold text-slate-800 text-sm">{colab.nome}</h3>
-            <p className="text-xs text-slate-500">{colab.papel} • {alocacaoAtual?.posto?.cliente?.nome_razao || 'Sem posto alocado'}</p>
+            <p className="text-xs text-slate-500">{colab.categoria_cargo} • {alocacaoAtual?.posto?.cliente?.nome_razao || 'Sem posto alocado'}</p>
           </div>
         </div>
       </div>
@@ -302,7 +302,7 @@ export function TratamentoAtrasoWizard({ colab, onClose, onSuccess }: Props) {
             <input type="checkbox" checked={clienteInformado} onChange={e => setClienteInformado(e.target.checked)} className="w-4 h-4 rounded text-brand-cyan" />
           </div>
 
-          {colab.papel.toLowerCase().includes('portei') && (
+          {(colab.categoria_cargo || '').toLowerCase().includes('portei') && (
             <div className="p-4 border border-brand-cyan/30 bg-brand-cyan/5 rounded-xl space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-bold text-brand-dark flex items-center gap-2"><User className="w-4 h-4"/> Alguém aguardou no posto?</span>

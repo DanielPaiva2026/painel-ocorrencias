@@ -59,7 +59,7 @@ export function TratamentoFeriasWizard({
       setSubstitutoId('');
       setTreinamentoConfirmado(false);
       
-      api.getSubstitutos(vagaAtual.posto_id, colab.categoria_cargo || undefined, new Date(dataAviso).toISOString(), undefined, undefined).then(data => {
+      api.getSubstitutos(vagaAtual.posto_id, colab.categoria_cargo || undefined, new Date(dataAviso).toISOString(), undefined, undefined, colab.cidade || undefined).then(data => {
         if (tipoSubstituicao === 'Livre') {
           setCandidatos(data);
         } else {
