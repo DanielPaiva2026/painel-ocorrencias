@@ -245,7 +245,7 @@ export function NovoServicoExtra() {
                   </span>
                 </div>
 
-                <div className="max-h-80 overflow-y-auto pr-1 flex flex-col gap-2 custom-scrollbar">
+                <div className="max-h-[50vh] overflow-y-auto pr-1 flex flex-col gap-2 custom-scrollbar">
                   {substitutosDisponiveis.length === 0 ? (
                     <div className="text-center py-8 text-slate-500 text-sm">
                       Nenhum profissional disponível com os requisitos solicitados.

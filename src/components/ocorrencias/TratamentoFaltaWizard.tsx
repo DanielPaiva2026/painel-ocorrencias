@@ -185,7 +185,7 @@ export function TratamentoFaltaWizard({ colab, onClose, onSuccess }: Props) {
 
     return (
       <div className="space-y-2">
-        <div className="max-h-48 overflow-y-auto pr-1 space-y-2">
+        <div className="max-h-[50vh] overflow-y-auto pr-1 space-y-2">
           {exibicao.map(sub => {
             const faltaNRSub = (exigeNR32 && !sub.tem_nr32) || (exigeNR35 && !sub.tem_nr35);
             return (

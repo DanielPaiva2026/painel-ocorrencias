@@ -197,7 +197,7 @@ export function TratamentoJornadaIncompletaWizard({ colab, onClose, onSuccess }:
               ) : candidatos.length === 0 ? (
                 <p className="text-sm text-amber-600 p-2 bg-amber-50 rounded">Nenhum substituto encontrado com os critérios.</p>
               ) : (
-                <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
                   {candidatos.map(sub => (
                     <label key={sub.id} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${substitutoSelecionado === sub.id ? 'border-brand-cyan bg-brand-cyan/5' : 'border-slate-100 bg-white hover:border-brand-cyan/30'}`}>
                       <input 

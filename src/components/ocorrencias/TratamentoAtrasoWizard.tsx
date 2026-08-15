@@ -147,7 +147,7 @@ export function TratamentoAtrasoWizard({ colab, onClose, onSuccess }: Props) {
     const selectedId = substitutosSelecionados[keySelected];
 
     return (
-      <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+      <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
         {candidatos.map(sub => (
           <label key={sub.id} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${selectedId === sub.id ? 'border-amber-500 bg-amber-100/50' : 'border-amber-100 bg-white hover:border-amber-300'}`}>
             <input 
