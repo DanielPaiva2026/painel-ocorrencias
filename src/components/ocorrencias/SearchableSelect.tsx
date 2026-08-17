@@ -55,7 +55,7 @@ export function SearchableSelect({ options, value, onChange, placeholder = "Sele
       </div>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-60 flex flex-col overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-[50vh] flex flex-col overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="p-2 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
             <Search className="w-4 h-4 text-slate-400 ml-1" />
             <input 
