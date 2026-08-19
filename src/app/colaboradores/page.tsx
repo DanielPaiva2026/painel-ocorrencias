@@ -427,22 +427,29 @@ export default function ColabsPage() {
                   } onChange={(v: any) => setSelectedColab({...selectedColab, admissao: v})} onBlur={() => handleUpdateField('admissao', selectedColab.admissao)} />
                   
                   {(() => {
-                    const exper2 = selectedColab.experiencia_2;
-                    if (!exper2) return null;
-                    const parts = exper2.split('/');
-                    if (parts.length === 3) {
-                      const expDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-                      if (expDate >= new Date(new Date().setHours(0,0,0,0))) {
+                      const isJovemAprendiz = (selectedColab.tipo_contratacao || '').toLowerCase().includes('aprendiz');
+                      if (isJovemAprendiz) {
                         return (
-                          <>
-                            <EditableField label="1ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_1} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_1: v})} onBlur={() => handleUpdateField('experiencia_1', selectedColab.experiencia_1)} />
-                            <EditableField label="2ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_2} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_2: v})} onBlur={() => handleUpdateField('experiencia_2', selectedColab.experiencia_2)} />
-                          </>
+                          <EditableField label="Término de Contrato" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_1} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_1: v})} onBlur={() => handleUpdateField('experiencia_1', selectedColab.experiencia_1)} />
                         );
                       }
-                    }
-                    return null;
-                  })()}
+
+                      const exper2 = selectedColab.experiencia_2;
+                      if (!exper2) return null;
+                      const parts = exper2.split('/');
+                      if (parts.length === 3) {
+                        const expDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+                        if (expDate >= new Date(new Date().setHours(0,0,0,0))) {
+                          return (
+                            <>
+                              <EditableField label="1ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_1} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_1: v})} onBlur={() => handleUpdateField('experiencia_1', selectedColab.experiencia_1)} />
+                              <EditableField label="2ª Experiência" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.experiencia_2} onChange={(v: any) => setSelectedColab({...selectedColab, experiencia_2: v})} onBlur={() => handleUpdateField('experiencia_2', selectedColab.experiencia_2)} />
+                            </>
+                          );
+                        }
+                      }
+                      return null;
+                    })()}
                 </div>
               </div>
             )}
