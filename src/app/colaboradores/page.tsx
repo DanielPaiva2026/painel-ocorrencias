@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { api, Colaborador } from '@/services/api';
 import ModalNovoColaborador from '@/components/colabs/ModalNovoColaborador';
+import { parsePostoTurnoCategoria, parseTipoEscala } from '@/lib/postoUtils';
 
 function parseHours(timeString: string | null | undefined): number {
   if (!timeString) return 0;
@@ -709,15 +710,15 @@ export default function ColabsPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
                           <div>
                             <span className="block text-[10px] uppercase font-bold text-slate-400 mb-1">Turno</span>
-                            <span className="font-medium text-slate-800">{alocacao.posto?.turno || '-'}</span>
+                            <span className="font-medium text-slate-800">{alocacao.posto?.turno || parsePostoTurnoCategoria(alocacao.posto?.codigo).turno}</span>
                           </div>
                           <div>
                             <span className="block text-[10px] uppercase font-bold text-slate-400 mb-1">Categoria</span>
-                            <span className="font-medium text-slate-800">{alocacao.posto?.categoria_posto || '-'}</span>
+                            <span className="font-medium text-slate-800">{alocacao.posto?.categoria_posto || parsePostoTurnoCategoria(alocacao.posto?.codigo).funcao}</span>
                           </div>
                           <div>
                             <span className="block text-[10px] uppercase font-bold text-slate-400 mb-1">Tipo de Escala</span>
-                            <span className="font-medium text-slate-800">{alocacao.posto?.tipo_escala || '-'}</span>
+                            <span className="font-medium text-slate-800">{alocacao.posto?.tipo_escala || parseTipoEscala(alocacao.posto?.descricao_escala)}</span>
                           </div>
                           <div>
                             <span className="block text-[10px] uppercase font-bold text-slate-400 mb-1">Carga Horária</span>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { api, Cliente } from '@/services/api';
 import ModalUploadContrato from '@/components/ModalUploadContrato';
+import { parsePostoTurnoCategoria, parseTipoEscala } from '@/lib/postoUtils';
 
 export default function ClientesPage() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
@@ -379,7 +380,7 @@ export default function ClientesPage() {
                           <h4 className="font-bold text-slate-800 text-md">{posto.codigo}</h4>
                           <div className="flex items-center gap-2">
                             <span className="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-                              {posto.turno || 'S/ Turno'}
+                              {posto.turno || parsePostoTurnoCategoria(posto.codigo).turno}
                             </span>
                             {['ADMIN', 'GERENCIA', 'RH', 'TEC_SEGURANCA'].includes(userProfile) && (
                               <button 
@@ -389,7 +390,7 @@ export default function ClientesPage() {
                                     exige_nr32: posto.exige_nr32,
                                     exige_nr35: posto.exige_nr35,
                                     horas_diarias: posto.horas_diarias,
-                                    categoria_posto: posto.categoria_posto
+                                    categoria_posto: posto.categoria_posto || parsePostoTurnoCategoria(posto.codigo).funcao
                                   });
                                 }}
                                 className="text-brand-cyan hover:text-brand-teal text-xs font-semibold px-2 py-0.5 border border-brand-cyan/20 rounded"
@@ -446,11 +447,12 @@ export default function ClientesPage() {
                           </div>
                         ) : (
                           <div className="space-y-1 mb-3">
-                            <p className="text-xs text-slate-500"><span className="font-semibold text-slate-700">Função:</span> {posto.categoria_posto || '-'}</p>
+                            <p className="text-xs text-slate-500"><span className="font-semibold text-slate-700">Função:</span> {posto.categoria_posto || parsePostoTurnoCategoria(posto.codigo).funcao}</p>
                             <p className="text-xs text-slate-500"><span className="font-semibold text-slate-700">Exigências:</span> {posto.exige_nr32 && posto.exige_nr35 ? 'NR32 e NR35' : (posto.exige_nr32 ? 'NR32' : (posto.exige_nr35 ? 'NR35' : 'Não se Aplica'))}</p>
                             <p className="text-xs text-slate-500"><span className="font-semibold text-slate-700">Tipo de Escala:</span> {
-                               ['A', 'B', 'C'].includes(posto.tipo_escala || '') ? `Mensalista (Escala ${posto.tipo_escala})` : (posto.tipo_escala && posto.tipo_escala.startsWith('D') ? posto.tipo_escala : (posto.tipo_escala || '-'))
+                               ['A', 'B', 'C'].includes(posto.tipo_escala || '') ? `Mensalista (Escala ${posto.tipo_escala})` : (posto.tipo_escala && posto.tipo_escala.startsWith('D') ? posto.tipo_escala : (posto.tipo_escala || parseTipoEscala(posto.descricao_escala)))
                             }</p>
+                            <p className="text-xs text-slate-500"><span className="font-semibold text-slate-700">Detalhes da Escala:</span> {posto.descricao_escala || '-'}</p>
                           </div>
                         )}
                         
