@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Loader2, ArrowRight, CheckCircle2, User, Clock, AlertTriangle, FileText } from 'lucide-react';
 import { api, Colaborador, PostoDeTrabalho } from '@/services/api';
+import { SubstitutoAvancadoFlow } from './SubstitutoAvancadoFlow';
 import { SearchableSelect } from './SearchableSelect';
 
 interface Props {
@@ -18,6 +19,8 @@ export function TratamentoAtrasoWizard({ colab, onClose, onSuccess }: Props) {
   // Dados do Passo 1
   const [vaiPegarPosto, setVaiPegarPosto] = useState<boolean | null>(null);
   const alocacaoAtual = colab.alocacoes?.[0]; // Assumindo a primeira alocação para simplificar
+  const exigeNR32 = alocacaoAtual?.posto?.exige_nr32 || false;
+  const exigeNR35 = alocacaoAtual?.posto?.exige_nr35 || false;
 
   // Dados Adicionais (Comuns)
   const [sancaoData, setSancaoData] = useState<{ sancao_sugerida: string, total_ocorrencias: number, ultima_ocorrencia: Date | null, historico_count: number, historico: any[] } | null>(null);
@@ -401,54 +404,28 @@ export function TratamentoAtrasoWizard({ colab, onClose, onSuccess }: Props) {
             </div>
           </div>
 
-          {diasCobertura > 1 && (
-            <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700">Usar o mesmo substituto para os {diasCobertura} dias?</span>
-              <input type="checkbox" checked={usarMesmoSubstituto} onChange={e => {
-                setUsarMesmoSubstituto(e.target.checked);
-                setSubstitutosSelecionados({});
-              }} className="w-4 h-4 rounded text-brand-cyan" />
-            </div>
-          )}
-
-          <div className="bg-amber-50 p-4 border border-amber-200 rounded-xl space-y-4">
-            <h4 className="font-bold text-amber-800 text-sm flex items-center gap-2 mb-1"><Clock className="w-4 h-4" /> Buscar Substituto(s)</h4>
-            <p className="text-xs text-amber-700 mb-3">Cobertura necessária para {diasCobertura} dia(s).</p>
-            
-            {usarMesmoSubstituto ? (
-              <div className="space-y-2">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Substituto para o período completo</span>
-                {renderCandidatos(isLoadingComum(), candidatosComuns(), 0)}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {Array.from({ length: diasCobertura }).map((_, i) => {
-                  const dataFormat = new Date();
-                  dataFormat.setDate(dataFormat.getDate() + i);
-                  return (
-                    <div key={i} className="border-t border-amber-200/50 pt-3 first:border-0 first:pt-0">
-                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">
-                        Dia {i + 1} - {dataFormat.toLocaleDateString('pt-BR')}
-                      </span>
-                      {renderCandidatos(loadingDias[i], substitutosPorDia[i] || [], i)}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          <div>
-            <label className="text-xs font-medium text-slate-600 mb-1 block">Observação / Justificativa</label>
-            <textarea value={observacao} onChange={e => setObservacao(e.target.value)} rows={2} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan"></textarea>
-          </div>
-
           <div className="flex gap-2 justify-end pt-4">
             <button onClick={() => setStep(1)} className="px-4 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg">Voltar</button>
-            <button onClick={handleSubmit} disabled={isSubmitDisabled()} className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center gap-2 disabled:opacity-50">
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Registrar Falta e Acionar Substituto(s)'}
+            <button onClick={() => setStep(3)} disabled={!sancaoSelecionada && !!sancaoData} className="bg-brand-cyan hover:bg-brand-teal text-white px-5 py-2 text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center gap-2 disabled:opacity-50">
+              Próximo Passo <ArrowRight className="w-4 h-4" />
             </button>
           </div>
+        </div>
+      )}
+
+      {step === 3 && vaiPegarPosto === false && (
+        <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
+           <SubstitutoAvancadoFlow 
+               diasCobertura={diasCobertura} 
+               colabOriginal={colab} 
+               alocacaoAtual={alocacaoAtual} 
+               exigeNR32={exigeNR32} 
+               exigeNR35={exigeNR35} 
+               onFinish={(flowData: any) => handleSubmitComFlow(flowData)}
+           />
+           <div className="pt-4 border-t border-slate-100 flex justify-start">
+              <button onClick={() => setStep(2)} className="text-slate-500 hover:text-slate-700 text-sm font-bold bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors">Voltar Passo Anterior</button>
+           </div>
         </div>
       )}
 

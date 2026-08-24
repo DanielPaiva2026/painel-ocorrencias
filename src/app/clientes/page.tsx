@@ -467,7 +467,9 @@ export default function ClientesPage() {
                                ['A', 'B', 'C'].includes(posto.tipo_escala || '') ? `Mensalista (Escala ${posto.tipo_escala})` : (posto.tipo_escala && posto.tipo_escala.startsWith('D') ? posto.tipo_escala : (posto.tipo_escala || parseTipoEscala(posto.descricao_escala)))
                             }</p>
                             <p className="text-xs text-slate-500"><span className="font-semibold text-slate-700">Detalhes da Escala:</span> {posto.descricao_escala || '-'}</p>
-                            <p className="text-xs text-slate-500"><span className="font-semibold text-slate-700">Data Base 12x36:</span> {posto.data_base_escala_12x36 || 'Não configurada'}</p>
+                            {(posto.codigo.includes('-A') || posto.tipo_escala === 'A' || String(posto.tipo_escala).includes('12x36') || String(posto.descricao_escala).includes('12 por 36') || String(posto.descricao_escala).includes('12x36')) && (
+                              <p className="text-xs text-slate-500"><span className="font-semibold text-slate-700">Data Base 12x36:</span> {posto.data_base_escala_12x36 || 'Não configurada'}</p>
+                            )}
                           </div>
                         )}
                         
