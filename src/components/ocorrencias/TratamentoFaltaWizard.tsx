@@ -461,6 +461,7 @@ export function TratamentoFaltaWizard({ colab, onClose, onSuccess }: Props) {
 )}
 
 
+
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Loader2, ArrowRight, CheckCircle2, User, Clock, AlertTriangle, FileText, Info } from 'lucide-react';
 import { api, Colaborador, PostoDeTrabalho } from '@/services/api';
+import { SubstitutoAvancadoFlow } from './SubstitutoAvancadoFlow';
 
 interface Props {
   colab: Colaborador;
@@ -443,65 +444,21 @@ export function TratamentoAusenciaWizard({ colab, onClose, onSuccess }: Props) {
       )}
 
       {step === 4 && (
-        <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
-          
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="font-bold text-slate-700 flex items-center gap-2"><User className="w-4 h-4"/> Seleção de Substituto</h4>
-            {diasCobertura > 1 && !isAfastamentoLongo && (
-               <label className="text-xs flex items-center gap-2 text-slate-600 bg-slate-100 px-2 py-1 rounded cursor-pointer">
-                 <input type="checkbox" checked={usarMesmoSubstituto} onChange={e => setUsarMesmoSubstituto(e.target.checked)} className="rounded" />
-                 Usar mesmo substituto para todos os dias
-               </label>
-            )}
-            {isAfastamentoLongo && (
-              <span className="text-xs font-bold text-brand-teal bg-brand-cyan/10 px-2 py-1 rounded">Alocação Única (Afastamento Longo)</span>
-            )}
-          </div>
-          
-          {(exigeNR32 || exigeNR35) && (
-            <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl flex gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <p className="text-xs text-emerald-800">O posto deste colaborador exige certificações: <strong>{[exigeNR32 ? 'NR32' : '', exigeNR35 ? 'NR35' : ''].filter(Boolean).join(' e ')}</strong>. Os candidatos abaixo foram ordenados com base neste requisito.</p>
-            </div>
-          )}
+  <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
+     <SubstitutoAvancadoFlow 
+         diasCobertura={diasCobertura} 
+         colabOriginal={colab} 
+         alocacaoAtual={alocacaoAtual} 
+         exigeNR32={exigeNR32} 
+         exigeNR35={exigeNR35} 
+         onFinish={(flowData: any) => handleSubmitComFlow(flowData)}
+     />
+     <div className="pt-4 border-t border-slate-100 flex justify-start">
+        <button onClick={() => setStep(3)} className="text-slate-500 hover:text-slate-700 text-sm font-bold bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors">Voltar Passo Anterior</button>
+     </div>
+  </div>
+)}
 
-          <div className="bg-amber-50 p-4 border border-amber-200 rounded-xl space-y-4">
-            {usarMesmoSubstituto ? (
-              <div className="space-y-2">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Substituto para o período completo ({diasCobertura} dia{diasCobertura>1?'s':''})</span>
-                {renderCandidatos(isLoadingComum(), candidatosComuns(), 0)}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {Array.from({ length: diasCobertura }).map((_, i) => {
-                  const dataFormat = new Date();
-                  dataFormat.setDate(dataFormat.getDate() + i);
-                  return (
-                    <div key={i} className="border-t border-amber-200/50 pt-3 first:border-0 first:pt-0">
-                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">
-                        Dia {i + 1} - {dataFormat.toLocaleDateString('pt-BR')}
-                      </span>
-                      {renderCandidatos(loadingDias[i], substitutosPorDia[i] || [], i)}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          <div>
-            <label className="text-xs font-medium text-slate-600 mb-1 block">Observação (Opcional)</label>
-            <input type="text" value={obsSubstituto} onChange={e => setObsSubstituto(e.target.value)} placeholder={isAfastamentoLongo ? "Ex: Alocada pelo período do INSS..." : "Ex: Contatada e ciente do horário..."} className="w-full rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-brand-cyan" />
-          </div>
-
-          <div className="flex gap-2 justify-end pt-4 border-t border-slate-100">
-            <button onClick={() => setStep(3)} className="px-4 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg">Voltar</button>
-            <button onClick={handleSubmit} disabled={isSubmitDisabled()} className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center gap-2 disabled:opacity-50">
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirmar Falta e Alocar Substituto'}
-            </button>
-          </div>
-        </div>
-      )}
 
     </div>
   );
