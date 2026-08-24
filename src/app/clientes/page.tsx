@@ -390,7 +390,8 @@ export default function ClientesPage() {
                                     exige_nr32: posto.exige_nr32,
                                     exige_nr35: posto.exige_nr35,
                                     horas_diarias: posto.horas_diarias,
-                                    categoria_posto: posto.categoria_posto || parsePostoTurnoCategoria(posto.codigo).funcao
+                                    categoria_posto: posto.categoria_posto || parsePostoTurnoCategoria(posto.codigo).funcao,
+                                    data_base_escala_12x36: posto.data_base_escala_12x36 || ''
                                   });
                                 }}
                                 className="text-brand-cyan hover:text-brand-teal text-xs font-semibold px-2 py-0.5 border border-brand-cyan/20 rounded"
@@ -410,6 +411,19 @@ export default function ClientesPage() {
                                 className="w-full text-xs p-1 border rounded" 
                                 value={editPostoData.categoria_posto || ''} 
                                 onChange={e => setEditPostoData({...editPostoData, categoria_posto: e.target.value})} 
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[10px] font-bold text-slate-500 uppercase">Data Base Escala 12x36</label>
+                              <input 
+                                type="date" 
+                                className="w-full text-xs p-1 border rounded" 
+                                value={editPostoData.data_base_escala_12x36 ? editPostoData.data_base_escala_12x36.split('/').reverse().join('-') : ''} 
+                                onChange={e => {
+                                  const val = e.target.value;
+                                  const formatted = val ? val.split('-').reverse().join('/') : '';
+                                  setEditPostoData({...editPostoData, data_base_escala_12x36: formatted});
+                                }} 
                               />
                             </div>
                             <div className="flex gap-4">
@@ -453,6 +467,7 @@ export default function ClientesPage() {
                                ['A', 'B', 'C'].includes(posto.tipo_escala || '') ? `Mensalista (Escala ${posto.tipo_escala})` : (posto.tipo_escala && posto.tipo_escala.startsWith('D') ? posto.tipo_escala : (posto.tipo_escala || parseTipoEscala(posto.descricao_escala)))
                             }</p>
                             <p className="text-xs text-slate-500"><span className="font-semibold text-slate-700">Detalhes da Escala:</span> {posto.descricao_escala || '-'}</p>
+                            <p className="text-xs text-slate-500"><span className="font-semibold text-slate-700">Data Base 12x36:</span> {posto.data_base_escala_12x36 || 'Não configurada'}</p>
                           </div>
                         )}
                         

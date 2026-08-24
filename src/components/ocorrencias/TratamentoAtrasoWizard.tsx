@@ -74,6 +74,42 @@ export function TratamentoAtrasoWizard({ colab, onClose, onSuccess }: Props) {
     }
   }, [vaiPegarPosto, alocacaoAtual, (colab.categoria_cargo || undefined), diasCobertura]);
 
+  
+  const handleSubmitComFlow = async (flowData: any) => {
+    setLoading(true);
+    let obsFinal = observacao;
+    if (flowData.substitutosSelecionados.some((s: any) => s.gerar_extra)) {
+       obsFinal += ' [Serviço Extra Gerado]';
+    }
+
+    const payload = {
+      atrasado_colab_id: colab.id,
+      posto_id: alocacaoAtual?.posto_id,
+      vai_pegar_posto: false,
+      sancao: sancaoSelecionada !== 'Nenhuma' ? sancaoSelecionada : null,
+      observacao: 'Falta/Ausência registrada.',
+      origem_informacao: 'SISTEMA',
+      motivo_falta: null,
+      documento_exigido: false,
+      documento_entregue: false,
+      observacao_substituto: obsFinal,
+      dias_afastamento: diasCobertura,
+      is_afastamento_longo: false,
+      substitutos: flowData.substitutosSelecionados,
+      descontos_cliente: flowData.descontos_cliente,
+      nome_titular: colab.nome,
+    };
+
+    const success = await api.registrarTratamentoAtraso(payload);
+    setLoading(false);
+
+    if (success) {
+      onSuccess();
+    } else {
+      alert('Falha ao registrar tratamento de ocorrência.');
+    }
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     const fakePorteiroId = "fake-porteiro-id"; 

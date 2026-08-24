@@ -71,6 +71,7 @@ export type PostoDeTrabalho = {
   horas_diarias: string | null;
   exige_nr32?: boolean;
   exige_nr35?: boolean;
+  data_base_escala_12x36?: string;
   alocacoes?: Alocacao[];
   cliente?: Cliente;
 };
