@@ -413,19 +413,45 @@ export default function ClientesPage() {
                                 onChange={e => setEditPostoData({...editPostoData, categoria_posto: e.target.value})} 
                               />
                             </div>
+                            
                             <div>
-                              <label className="text-[10px] font-bold text-slate-500 uppercase">Data Base Escala 12x36</label>
+                              <label className="text-[10px] font-bold text-slate-500 uppercase">Tipo de Escala</label>
                               <input 
-                                type="date" 
+                                type="text" 
                                 className="w-full text-xs p-1 border rounded" 
-                                value={editPostoData.data_base_escala_12x36 ? editPostoData.data_base_escala_12x36.split('/').reverse().join('-') : ''} 
-                                onChange={e => {
-                                  const val = e.target.value;
-                                  const formatted = val ? val.split('-').reverse().join('/') : '';
-                                  setEditPostoData({...editPostoData, data_base_escala_12x36: formatted});
-                                }} 
+                                value={editPostoData.tipo_escala || ''} 
+                                onChange={e => setEditPostoData({...editPostoData, tipo_escala: e.target.value})}
+                                placeholder="Ex: 12x36, 6x1, 5x2..."
                               />
                             </div>
+
+                            <div>
+                              <label className="text-[10px] font-bold text-slate-500 uppercase">Detalhes da Escala</label>
+                              <textarea 
+                                className="w-full text-xs p-1 border rounded" 
+                                value={editPostoData.descricao_escala || ''} 
+                                onChange={e => setEditPostoData({...editPostoData, descricao_escala: e.target.value})}
+                                placeholder="Ex: 12 por 36 - 08:00 às 20:00 - Intervalo: 00h - 01h..."
+                                rows={2}
+                              />
+                            </div>
+
+                            {(posto.codigo.includes('-A') || posto.tipo_escala === 'A' || String(posto.tipo_escala).includes('12x36') || String(posto.descricao_escala).includes('12 por 36') || String(posto.descricao_escala).includes('12x36') || String(editPostoData.tipo_escala).includes('12x36') || String(editPostoData.descricao_escala).includes('12x36')) && (
+                              <div>
+                                <label className="text-[10px] font-bold text-slate-500 uppercase">Data Base Escala 12x36</label>
+                                <input 
+                                  type="date" 
+                                  className="w-full text-xs p-1 border rounded" 
+                                  value={editPostoData.data_base_escala_12x36 ? editPostoData.data_base_escala_12x36.split('/').reverse().join('-') : ''} 
+                                  onChange={e => {
+                                    const val = e.target.value;
+                                    const formatted = val ? val.split('-').reverse().join('/') : '';
+                                    setEditPostoData({...editPostoData, data_base_escala_12x36: formatted});
+                                  }} 
+                                />
+                              </div>
+                            )}
+
                             <div className="flex gap-4">
                               <label className="flex items-center gap-1 text-xs text-slate-700">
                                 <input 
