@@ -391,7 +391,9 @@ export default function ClientesPage() {
                                     exige_nr35: posto.exige_nr35,
                                     horas_diarias: posto.horas_diarias,
                                     categoria_posto: posto.categoria_posto || parsePostoTurnoCategoria(posto.codigo).funcao,
-                                    data_base_escala_12x36: posto.data_base_escala_12x36 || ''
+                                    data_base_escala_12x36: posto.data_base_escala_12x36 || '',
+                                    tipo_escala: posto.tipo_escala || '',
+                                    descricao_escala: posto.descricao_escala || ''
                                   });
                                 }}
                                 className="text-brand-cyan hover:text-brand-teal text-xs font-semibold px-2 py-0.5 border border-brand-cyan/20 rounded"
