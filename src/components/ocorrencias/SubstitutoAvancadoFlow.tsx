@@ -95,7 +95,7 @@ export function SubstitutoAvancadoFlow({ diasCobertura, colabOriginal, alocacaoA
     }
   }, [subManualId, todosColabs]);
 
-  const finalizarFluxoManual = () => {
+  const finalizarFluxoManual = (nestedData?: any) => {
      const payloadsSubs = [];
      const descontos = [];
      
