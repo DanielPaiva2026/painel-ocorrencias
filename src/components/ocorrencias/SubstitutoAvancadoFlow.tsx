@@ -203,9 +203,21 @@ export function SubstitutoAvancadoFlow({ diasCobertura, colabOriginal, alocacaoA
                        )}
 
                        {vaiMandarAlguemProPosto === true && (
-                          <div className="pt-2 border-t border-amber-200/50 animate-in fade-in space-y-3">
-                             <p className="text-xs font-bold text-amber-900">Como você optou por cobrir também este posto, vamos focar agora apenas em registrar a falta atual do titular. Depois, volte ao painel para registrar a ausência de {subManualCalculado.colab.nome}.</p>
-                             <button onClick={finalizarFluxoManual} className="w-full bg-brand-cyan hover:bg-brand-teal text-white font-bold py-2 rounded-lg text-sm transition-colors">Confirmar Substituto</button>
+                          <div className="pt-4 border-t border-amber-200/50 animate-in fade-in">
+                             <div className="bg-white p-4 rounded-lg border-2 border-dashed border-amber-300">
+                                <h4 className="text-sm font-bold text-amber-800 mb-3 flex items-center gap-2">
+                                   <User className="w-4 h-4" /> 
+                                   Quem vai cobrir o posto de {subManualCalculado.colab.nome}?
+                                </h4>
+                                <SubstitutoAvancadoFlow 
+                                   diasCobertura={diasCobertura}
+                                   colabOriginal={subManualCalculado.colab}
+                                   alocacaoAtual={subManualCalculado.colab.alocacoes?.[0]}
+                                   exigeNR32={subManualCalculado.colab.alocacoes?.[0]?.posto?.exige_nr32}
+                                   exigeNR35={subManualCalculado.colab.alocacoes?.[0]?.posto?.exige_nr35}
+                                   onFinish={(nestedData: any) => finalizarFluxoManual(nestedData)}
+                                />
+                             </div>
                           </div>
                        )}
 
