@@ -94,7 +94,18 @@ export function DashboardView({ data }: { data: any }) {
             </button>
           </div>
           <div className="flex gap-2">
+            
+            <button onClick={() => {
+              const pin = prompt('Digite o PIN de Admin para baixar o backup (Padrão: 123456):');
+              if(pin) {
+                const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+                window.open(`${API_URL}/upload/backup?pin=${pin}`, '_blank');
+              }
+            }} className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-lg text-sm font-bold shadow-sm flex items-center gap-2 transition-colors">
+              <FileText className="w-4 h-4" /> Backup (ZIP)
+            </button>
             <NovoServicoExtra />
+
             <NovaOcorrencia />
           </div>
         </div>

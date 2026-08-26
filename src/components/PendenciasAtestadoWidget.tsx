@@ -13,6 +13,7 @@ export function PendenciasAtestadoWidget() {
   const [sancaoLoading, setSancaoLoading] = useState(false);
   const [sancaoEscolhida, setSancaoEscolhida] = useState('');
   const [obsSubstituto, setObsSubstituto] = useState('');
+  const [atestadoFile, setAtestadoFile] = useState<File | null>(null);
   const [resolvendo, setResolvendo] = useState(false);
   const router = useRouter();
 
@@ -51,12 +52,19 @@ export function PendenciasAtestadoWidget() {
     if (!selectedPendencia) return;
     setResolvendo(true);
     try {
+      let urlDocumento = null;
+      if (entregouDocumento && atestadoFile) {
+        const uploadRes = await api.uploadFile(atestadoFile);
+        if (uploadRes) urlDocumento = uploadRes.url;
+      }
+
       // Passando também a obsSubstituto para ser logada/salva como observação
       const payload = obsSubstituto ? `${sancaoEscolhida} | Chamado para cobrir: ${obsSubstituto}` : sancaoEscolhida;
-      const ok = await api.resolverPendenciaDocumento(selectedPendencia.id, payload, entregouDocumento);
+      const ok = await api.resolverPendenciaDocumento(selectedPendencia.id, payload, entregouDocumento, urlDocumento || undefined);
       if (ok) {
         setSelectedPendencia(null);
         setObsSubstituto('');
+        setAtestadoFile(null);
         await loadData();
         router.refresh();
       } else {
@@ -195,6 +203,18 @@ export function PendenciasAtestadoWidget() {
                       </p>
                     </div>
                   )}
+
+                  <div className="mt-4 pt-4 border-t border-slate-100">
+                    <label className="text-sm font-medium text-slate-700 block mb-1">
+                      Anexar Atestado (Opcional se entregar hoje):
+                    </label>
+                    <input 
+                      type="file" 
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={e => setAtestadoFile(e.target.files?.[0] || null)}
+                      className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-cyan/10 file:text-brand-cyan hover:file:bg-brand-cyan/20"
+                    />
+                  </div>
 
                   <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
                     <button onClick={() => handleResolve(true)} disabled={resolvendo} className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 disabled:opacity-70">

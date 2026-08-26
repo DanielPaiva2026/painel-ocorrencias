@@ -24,6 +24,7 @@ export function TratamentoFaltaWizard({ colab, onClose, onSuccess }: Props) {
   // Step 2
   const [motivo, setMotivo] = useState('');
   const [documentoJaEnviado, setDocumentoJaEnviado] = useState(false);
+  const [atestadoFile, setAtestadoFile] = useState<File | null>(null);
   const exigeDoc = ['Doença', 'INSS', 'Doação de Sangue', 'Acompanhar Filho Médico'].includes(motivo);
 
   // Step 3

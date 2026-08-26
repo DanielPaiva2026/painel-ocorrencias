@@ -17,6 +17,7 @@ export function TratamentoJornadaIncompletaWizard({ colab, onClose, onSuccess }:
   const [tipoJornada, setTipoJornada] = useState<'Chegar mais tarde' | 'Sair mais cedo' | ''>('');
   const [tempoMinutos, setTempoMinutos] = useState('');
   const [enviouAtestado, setEnviouAtestado] = useState(false);
+  const [atestadoFile, setAtestadoFile] = useState<File | null>(null);
   const [observacao, setObservacao] = useState('');
   
   // Sanção
@@ -68,6 +69,7 @@ export function TratamentoJornadaIncompletaWizard({ colab, onClose, onSuccess }:
       sancao: sancaoSelecionada,
       observacao: observacao,
       enviou_atestado: enviouAtestado,
+      url_documento: null,
       precisa_cobertura: precisaCobertura,
       substituto_id: precisaCobertura ? substitutoSelecionado : null,
     };

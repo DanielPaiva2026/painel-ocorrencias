@@ -24,6 +24,7 @@ export function TratamentoAusenciaWizard({ colab, onClose, onSuccess }: Props) {
   // Step 2
   const [motivo, setMotivo] = useState('');
   const [documentoJaEnviado, setDocumentoJaEnviado] = useState(false);
+  const [atestadoFile, setAtestadoFile] = useState<File | null>(null);
   const exigeDoc = ['Doença', 'INSS', 'Doação de Sangue', 'Acompanhar Filho Médico'].includes(motivo);
 
   // Step 3
@@ -89,6 +90,12 @@ export function TratamentoAusenciaWizard({ colab, onClose, onSuccess }: Props) {
   
   const handleSubmitComFlow = async (flowData: any) => {
     setLoading(true);
+
+    let urlDocumento = null;
+    if (documentoJaEnviado && atestadoFile) {
+      const res = await api.uploadFile(atestadoFile);
+      if (res) urlDocumento = res.url;
+    }
     let obsFinal = obsSubstituto;
     if (flowData.substitutosSelecionados.some((s: any) => s.gerar_extra)) {
        obsFinal += ' [Serviço Extra Gerado]';
@@ -104,6 +111,7 @@ export function TratamentoAusenciaWizard({ colab, onClose, onSuccess }: Props) {
       motivo_falta: motivo,
       documento_exigido: exigeDoc,
       documento_entregue: documentoJaEnviado,
+      url_documento: urlDocumento,
       observacao_substituto: obsFinal,
       dias_afastamento: diasCobertura,
       is_afastamento_longo: false,

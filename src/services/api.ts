@@ -23,6 +23,8 @@ export type Colaborador = {
   observacao_retorno?: string;
   ferias_ultimo_aquisitivo?: string;
   ferias_notificacao?: string;
+  url_aso?: string | null;
+  url_exame_complementar?: string | null;
   ferias_limite_entrada?: string;
   ferias_retorno?: string;
   ferias_vencimento?: string;
@@ -219,6 +221,22 @@ export type DashboardStats = {
 };
 
 export const api = {
+  async uploadFile(file: File): Promise<{url: string, filename: string} | null> {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch(`${API_URL}/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+      if (res.ok) {
+        return await res.json();
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  },
   getOcorrencias: async (): Promise<Ocorrencia[]> => {
     try {
       const res = await fetch(`${API_URL}/ocorrencias`, { 
@@ -768,14 +786,14 @@ export const api = {
     return res.json();
   },
 
-  resolverPendenciaDocumento: async (id: string, sancao: string, entregouDocumento: boolean = false): Promise<boolean> => {
+  resolverPendenciaDocumento: async (id: string, sancao: string, entregouDocumento: boolean = false, url_documento?: string): Promise<boolean> => {
     const res = await fetch(`${API_URL}/ocorrencias/${id}/resolver-pendencia`, {
       method: 'PATCH',
       headers: { 
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
       },
-      body: JSON.stringify({ sancao, entregou_documento: entregouDocumento })
+      body: JSON.stringify({ sancao, entregou_documento: entregouDocumento, url_documento })
     });
     return res.ok;
   }
