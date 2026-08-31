@@ -105,6 +105,7 @@ export default function ColabsPage() {
   const [buscaNome, setBuscaNome] = useState('');
   const [buscaCidade, setBuscaCidade] = useState('');
   const [buscaFuncao, setBuscaFuncao] = useState('');
+  const [filtroStatus, setFiltroStatus] = useState<'ATIVO' | 'INATIVO'>('ATIVO');
   
   const [selectedColab, setSelectedColab] = useState<Colaborador | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -136,7 +137,7 @@ export default function ColabsPage() {
     // Se a busca estiver vazia, esconder inativos. Se tiver busca, mostrar os inativos que derem match
     const isBuscaAtiva = buscaNome.length > 0 || buscaCidade.length > 0 || buscaFuncao.length > 0;
     const isActive = col.status_cadastro !== 'Inativo';
-    const matchStatus = isBuscaAtiva ? true : isActive;
+    const matchStatus = filtroStatus === 'ATIVO' ? isActive : !isActive;
 
     return matchNome && matchCidade && matchFuncao && matchStatus;
   });
@@ -785,9 +786,15 @@ export default function ColabsPage() {
             />
           </div>
           
-          <select 
-            className="md:w-48 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-700 font-medium outline-none focus:border-brand-teal"
-            value={buscaCidade}
+          <button 
+              onClick={() => setFiltroStatus(filtroStatus === 'ATIVO' ? 'INATIVO' : 'ATIVO')}
+              className={`md:w-32 px-4 py-3 rounded-xl font-bold text-sm transition-colors ${filtroStatus === 'ATIVO' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
+            >
+              {filtroStatus}S
+            </button>
+            <select 
+              className="md:w-48 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-700 font-medium outline-none focus:border-brand-teal"
+              value={buscaCidade}
             onChange={(e) => setBuscaCidade(e.target.value)}
           >
             <option value="">Todas Cidades</option>
@@ -839,9 +846,9 @@ export default function ColabsPage() {
                   <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
                     {col.categoria_cargo}
                   </span>
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold border ${!col.situacao_disponibilidade || col.situacao_disponibilidade === 'Livre' ? 'bg-green-50 text-green-700 border-green-200' : col.situacao_disponibilidade === 'Alocado' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-orange-50 text-orange-700 border-orange-200'}`}>
-                    {col.situacao_disponibilidade || 'Livre'}
-                  </span>
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold border ${(!col.situacao_disponibilidade || col.situacao_disponibilidade === 'Livre' || col.situacao_disponibilidade === 'Disponível') ? 'bg-green-50 text-green-700 border-green-200' : col.situacao_disponibilidade === 'Alocado' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-orange-50 text-orange-700 border-orange-200'}`}>
+                      {(!col.situacao_disponibilidade || col.situacao_disponibilidade === 'Disponível') ? 'Livre' : col.situacao_disponibilidade}
+                    </span>
                   <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold bg-brand-cyan/10 text-brand-teal border border-brand-cyan/20">
                     {col.tipo_contratacao || 'Alocação Padrão'}
                   </span>
