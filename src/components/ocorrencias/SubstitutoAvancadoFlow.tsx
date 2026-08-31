@@ -80,6 +80,11 @@ export function SubstitutoAvancadoFlow({ diasCobertura, colabOriginal, alocacaoA
            deFolga = true; // livre
         }
         
+        // Se a API informou que ele está de folga ou férias, força como folga para gerar hora extra
+        if (c.tipoDisponibilidade && (c.tipoDisponibilidade.includes('Folga') || c.tipoDisponibilidade.includes('Férias') || c.tipoDisponibilidade.includes('Ferias'))) {
+           deFolga = true;
+        }
+        
         setSubManualCalculado({
           colab: c,
           deFolga,

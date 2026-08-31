@@ -138,7 +138,7 @@ export function TratamentoAusenciaWizard({ colab, onClose, onSuccess }: Props) {
       if (!sub) return true; // fallback
       const tipo = (sub.tipo_contratacao || '').toUpperCase();
       const isIntermitenteOuHorista = tipo.includes('INTERMITENTE') || tipo.includes('HORISTA');
-      const isFolga = sub.tipoDisponibilidade?.includes('Folga') || false;
+      const isFolga = sub.tipoDisponibilidade?.includes('Folga') || sub.tipoDisponibilidade?.includes('Férias') || sub.tipoDisponibilidade?.includes('Ferias') || false;
       return isIntermitenteOuHorista || isFolga;
     };
 
