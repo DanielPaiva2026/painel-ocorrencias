@@ -771,7 +771,10 @@ export const api = {
   },
 
   getRelatorioExtratos: async (): Promise<any> => {
-    const res = await fetch(`${API_URL}/relatorios/extratos`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` } });
+    const res = await fetch(`${API_URL}/relatorios/extratos`, { 
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+      cache: 'no-store'
+    });
     if (!res.ok) throw new Error('Falha ao buscar extratos gerenciais');
     return res.json();
   },
