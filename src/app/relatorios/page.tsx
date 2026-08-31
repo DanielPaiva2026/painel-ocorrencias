@@ -262,9 +262,9 @@ export default function RelatoriosPage() {
         )}
 
         {activeTab === 'extratos' && extratos && (
+          <div className="w-full">
             <div className="bg-red-100 p-4 mb-4 rounded text-xs overflow-auto"><pre>{JSON.stringify(extratos, null, 2)}</pre></div>
-          
-          <div className="space-y-8 animate-in fade-in duration-300">
+            <div className="space-y-8 animate-in fade-in duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
                   <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Postos de Trabalho</p>
@@ -317,6 +317,7 @@ export default function RelatoriosPage() {
                 )}
               </div>
             </div>
+          </div>
           </div>
         )}
       </div>
