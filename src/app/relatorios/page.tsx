@@ -265,21 +265,21 @@ export default function RelatoriosPage() {
           <div className="space-y-8 animate-in fade-in duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Postos de Trabalho</p>
-                <p className="text-3xl font-black text-slate-800">{extratos.vagas.totalPostos}</p>
-              </div>
-              <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-5">
-                <p className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">Alocações Ativas</p>
-                <p className="text-3xl font-black text-emerald-800">{extratos.vagas.alocacoes}</p>
-              </div>
-              <div className="bg-amber-50 border border-amber-100 rounded-xl p-5">
-                <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-1">Vagas Abertas</p>
-                <p className="text-3xl font-black text-amber-800">{extratos.vagas.vagasAbertas}</p>
-              </div>
-              <div className="bg-brand-cyan/10 border border-brand-cyan/20 rounded-xl p-5">
-                <p className="text-xs font-bold text-brand-dark uppercase tracking-wider mb-1">Colabs Livres</p>
-                <p className="text-3xl font-black text-brand-teal">{extratos.disponibilidade.colabsLivres}</p>
-              </div>
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Postos de Trabalho</p>
+                  <p className="text-3xl font-black text-slate-800">{extratos.vagas.totalPostos}</p>
+                </div>
+                <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-5">
+                  <p className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">Colabs. Ativos</p>
+                  <p className="text-3xl font-black text-emerald-800">{extratos.vagas.colabsAtivos}</p>
+                </div>
+                <div className="bg-amber-50 border border-amber-100 rounded-xl p-5">
+                  <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-1">Colabs. Alocados</p>
+                  <p className="text-3xl font-black text-amber-800">{extratos.vagas.colabsAlocados}</p>
+                </div>
+                <div className="bg-brand-cyan/10 border border-brand-cyan/20 rounded-xl p-5">
+                  <p className="text-xs font-bold text-brand-dark uppercase tracking-wider mb-1">Colabs. Livres</p>
+                  <p className="text-3xl font-black text-brand-teal">{extratos.vagas.colabsLivres}</p>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

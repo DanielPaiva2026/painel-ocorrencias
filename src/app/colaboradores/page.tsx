@@ -761,7 +761,7 @@ export default function ColabsPage() {
         </div>
         <div className="flex items-center gap-3">
           <div className="bg-brand-teal/10 text-brand-teal px-4 py-2 rounded-xl font-bold flex gap-2">
-            Total: <span>{colaboradores.length}</span>
+            Total: <span>{filteredColabs.length}</span>
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
