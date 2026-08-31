@@ -122,6 +122,11 @@ export function SubstitutoAvancadoFlow({ diasCobertura, colabOriginal, alocacaoA
         });
      }
 
+     if (nestedData) {
+        payloadsSubs.push(...(nestedData.substitutosSelecionados || []));
+        descontos.push(...(nestedData.descontos_cliente || []));
+     }
+     
      onFinish({
        substitutosSelecionados: payloadsSubs,
        descontos_cliente: descontos

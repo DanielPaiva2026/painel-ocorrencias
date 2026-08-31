@@ -127,6 +127,8 @@ export default function HistoricoOcorrenciasPage() {
                         oc.tipo === 'Atraso' ? 'bg-amber-50 text-amber-600' : 
                         oc.tipo === 'Alocada' ? 'bg-brand-cyan/10 text-brand-teal' :
                         oc.tipo === 'Alocado' ? 'bg-indigo-50 text-indigo-600' :
+                        oc.tipo === 'Substituição' ? 'bg-green-50 text-green-600' :
+                        oc.tipo === 'Trabalho Intermitente' ? 'bg-orange-50 text-orange-600' :
                         oc.tipo === 'Treinamento NR' ? 'bg-purple-50 text-purple-600' : 'bg-slate-100 text-slate-600'
                       )}>
                         {oc.tipo}
