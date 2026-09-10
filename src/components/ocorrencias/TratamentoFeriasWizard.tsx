@@ -25,6 +25,29 @@ export function TratamentoFeriasWizard({
 }) {
   const [step, setStep] = useState<Step>('AVISO');
   const [loading, setLoading] = useState(false);
+  const [userProfile, setUserProfile] = useState('');
+  useEffect(() => {
+    setUserProfile(localStorage.getItem('auth_role') || '');
+  }, []);
+  const canEditDatas = ['ADMIN', 'RH', 'DP', 'COORDENADOR', 'COORDENADOR ADMINISTRATIVO'].includes(userProfile.toUpperCase());
+
+  const [aquisitivo, setAquisitivo] = useState(colab.ferias_ultimo_aquisitivo || '');
+  const [vencimento, setVencimento] = useState(colab.ferias_vencimento || '');
+  const [limiteEntrada, setLimiteEntrada] = useState(colab.ferias_limite_entrada || '');
+  const [notificacao, setNotificacao] = useState(colab.ferias_notificacao || '');
+
+  const saveFeriasDatas = async () => {
+    setLoading(true);
+    await api.updateColab(colab.id, {
+      ferias_ultimo_aquisitivo: aquisitivo,
+      ferias_vencimento: vencimento,
+      ferias_limite_entrada: limiteEntrada,
+      ferias_notificacao: notificacao
+    });
+    setLoading(false);
+    alert('Datas salvas com sucesso!');
+  };
+
 
   // Aviso State
   const [dataAviso, setDataAviso] = useState(new Date().toISOString().split('T')[0]);
@@ -237,10 +260,34 @@ export function TratamentoFeriasWizard({
         </span>
       </div>
 
-      <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 mb-2">
-        <p className="text-sm font-medium text-slate-700">Colaborador: <span className="font-bold">{colab.nome}</span></p>
-        <p className="text-xs text-slate-500">Último Aquisitivo: {colab.ferias_ultimo_aquisitivo || 'Não registrado'}</p>
-      </div>
+      
+        <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 shadow-sm">
+          <p className="text-sm font-medium text-slate-700 mb-3 border-b border-slate-200 pb-2">Colaborador: <span className="font-bold">{colab.nome}</span></p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Último Aquisitivo (Fechamento)</label>
+              <input type="date" value={aquisitivo} onChange={e => setAquisitivo(e.target.value)} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Limite Máximo p/ Tirar Férias</label>
+              <input type="date" value={vencimento} onChange={e => setVencimento(e.target.value)} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Data Máx p/ Iniciar (Limite - 15d)</label>
+              <input type="date" value={limiteEntrada} onChange={e => setLimiteEntrada(e.target.value)} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Data Limite p/ Aviso (Entrada - 30d)</label>
+              <input type="date" value={notificacao} onChange={e => setNotificacao(e.target.value)} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
+            </div>
+          </div>
+          {canEditDatas && (
+            <div className="flex justify-end mt-3">
+              <button type="button" onClick={saveFeriasDatas} className="text-xs bg-brand-cyan text-white px-3 py-1.5 rounded-lg hover:bg-brand-teal transition-colors font-bold shadow-sm">Salvar Datas-Base</button>
+            </div>
+          )}
+        </div>
+
 
       {step === 'AVISO' && (
         <form onSubmit={handleCriarAviso} className="flex flex-col gap-4">
