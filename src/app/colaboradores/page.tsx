@@ -105,6 +105,8 @@ export default function ColabsPage() {
   const [buscaNome, setBuscaNome] = useState('');
   const [buscaCidade, setBuscaCidade] = useState('');
   const [buscaFuncao, setBuscaFuncao] = useState('');
+  const [buscaTipoContratacao, setBuscaTipoContratacao] = useState('');
+  const [buscaSituacao, setBuscaSituacao] = useState('');
   const [filtroStatus, setFiltroStatus] = useState<'ATIVO' | 'INATIVO'>('ATIVO');
   
   const [selectedColab, setSelectedColab] = useState<Colaborador | null>(null);
@@ -133,17 +135,28 @@ export default function ColabsPage() {
     const matchNome = col.nome.toLowerCase().includes(buscaNome.toLowerCase()) || (col.matricula && col.matricula.toLowerCase().includes(buscaNome.toLowerCase()));
     const matchCidade = buscaCidade ? (col.cidade === buscaCidade || col.localizacao === buscaCidade) : true;
     const matchFuncao = buscaFuncao ? col.categoria_cargo === buscaFuncao : true;
+    const matchTipoContratacao = buscaTipoContratacao ? col.tipo_contratacao === buscaTipoContratacao : true;
+    const situacaoMap = (disp: string | null | undefined, isAlocado: boolean) => {
+      const d = (disp || '').toLowerCase();
+      if (d.includes('inss')) return 'INSS';
+      if (d.includes('atestado')) return 'Atestado';
+      if (d.includes('férias') || d.includes('ferias')) return 'Férias';
+      if (isAlocado) return 'Alocado';
+      return 'Livre';
+    };
+    const matchSituacao = buscaSituacao ? situacaoMap(col.situacao_disponibilidade, !!(col.alocacoes && col.alocacoes.length > 0)) === buscaSituacao : true;
     
     // Se a busca estiver vazia, esconder inativos. Se tiver busca, mostrar os inativos que derem match
-    const isBuscaAtiva = buscaNome.length > 0 || buscaCidade.length > 0 || buscaFuncao.length > 0;
+    const isBuscaAtiva = buscaNome.length > 0 || buscaCidade.length > 0 || buscaFuncao.length > 0 || buscaTipoContratacao.length > 0 || buscaSituacao.length > 0;
     const isActive = col.status_cadastro !== 'Inativo';
     const matchStatus = filtroStatus === 'ATIVO' ? isActive : !isActive;
 
-    return matchNome && matchCidade && matchFuncao && matchStatus;
+    return matchNome && matchCidade && matchFuncao && matchStatus && matchTipoContratacao && matchSituacao;
   });
 
   const uniqueCidades = Array.from(new Set(colaboradores.map(c => c.cidade || c.localizacao).filter((c): c is string => !!c))).sort();
   const uniqueFuncoes = Array.from(new Set(colaboradores.map(c => c.categoria_cargo).filter((c): c is string => !!c))).sort();
+  const uniqueTiposContratacao = Array.from(new Set(colaboradores.map(c => c.tipo_contratacao).filter((c): c is string => !!c))).sort();
 
   const handleUpdateField = async (field: string, value: any) => {
     if (!selectedColab) return;
@@ -813,6 +826,31 @@ export default function ColabsPage() {
               <option key={funcao} value={funcao}>{funcao}</option>
             ))}
           </select>
+
+            <select 
+              className="md:w-48 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-700 font-medium outline-none focus:border-brand-teal"
+              value={buscaTipoContratacao}
+              onChange={(e) => setBuscaTipoContratacao(e.target.value)}
+            >
+              <option value="">Tipos (Contratação)</option>
+              {uniqueTiposContratacao.map(tipo => (
+                <option key={tipo} value={tipo}>{tipo}</option>
+              ))}
+            </select>
+
+            <select 
+              className="md:w-48 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-700 font-medium outline-none focus:border-brand-teal"
+              value={buscaSituacao}
+              onChange={(e) => setBuscaSituacao(e.target.value)}
+            >
+              <option value="">Todas Situações</option>
+              <option value="Alocado">Alocado</option>
+              <option value="Livre">Livre</option>
+              <option value="INSS">INSS</option>
+              <option value="Atestado">Atestado</option>
+              <option value="Férias">Férias</option>
+            </select>
+
         </div>
 
         <div className="space-y-3">
