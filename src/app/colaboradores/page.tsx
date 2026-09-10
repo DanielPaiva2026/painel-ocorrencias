@@ -231,6 +231,7 @@ export default function ColabsPage() {
   const canEditTreinamento = ['ADMIN', 'RH', 'DP', 'SEGURANÇA DO TRABALHO', 'SEG. DO TRABALHO'].includes(userProfile.toUpperCase());
   const canEditCadastral = ['ADMIN', 'RH', 'DP'].includes(userProfile.toUpperCase());
   const canEditContrato = ['ADMIN', 'RH', 'DP'].includes(userProfile.toUpperCase());
+  const canEditRegime = ['ADMIN', 'RH'].includes(userProfile.toUpperCase());
   const canEditOcorrencia = ['ADMIN', 'GERENCIA', 'COORDENADOR', 'COORDENADOR ADMINISTRATIVO'].includes(userProfile.toUpperCase());
 
 
@@ -428,11 +429,9 @@ export default function ColabsPage() {
             {expandedSection === 'contrato' && (
               <div className="p-6 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <EditableField label="Regime de Contratação" type="readonly" value={selectedColab.tipo_contratacao || ''} />
+                  <EditableField label="Regime de Contratação" type={canEditRegime ? 'select' : 'readonly'} options={['MENSALISTA', 'HORISTA', 'JOVEM APRENDIZ', 'ESTAGIÁRIO', 'INTERMITENTE']} value={selectedColab.tipo_contratacao || ''} onChange={(v: any) => setSelectedColab({...selectedColab, tipo_contratacao: v})} onBlur={() => handleUpdateField('tipo_contratacao', selectedColab.tipo_contratacao)} />
                   
-                  {selectedColab.tipo_contratacao === 'HORISTA' && (
-                     <EditableField label="Horas Contratadas" type="number" value={selectedColab.horas_contratadas} onChange={(v: any) => setSelectedColab({...selectedColab, horas_contratadas: v})} onBlur={() => handleUpdateField('horas_contratadas', selectedColab.horas_contratadas)} />
-                  )}
+                  <EditableField label="Horas Contratadas" type={canEditRegime ? 'number' : 'readonly'} value={selectedColab.horas_contratadas} onChange={(v: any) => setSelectedColab({...selectedColab, horas_contratadas: v})} onBlur={() => handleUpdateField('horas_contratadas', selectedColab.horas_contratadas)} />
 
                   <EditableField label="Cargo (Função)" type={canEditContrato ? 'text' : 'readonly'} value={selectedColab.categoria_cargo} onChange={(v: any) => setSelectedColab({...selectedColab, categoria_cargo: v})} onBlur={() => handleUpdateField('categoria_cargo', selectedColab.categoria_cargo)} />
                   <EditableField label="Data de Admissão (DD/MM/AAAA)" mask="date" type={canEditContrato ? 'text' : 'readonly'} value={
