@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { api, Colaborador } from '@/services/api';
+import { TrocaSetorWizard } from '@/components/ocorrencias/TrocaSetorWizard';
 import ModalNovoColaborador from '@/components/colabs/ModalNovoColaborador';
 import { parsePostoTurnoCategoria, parseTipoEscala } from '@/lib/postoUtils';
 
@@ -913,6 +914,15 @@ export default function ColabsPage() {
         </div>
       </div>
 
+      {isTrocaSetorOpen && (
+        <TrocaSetorWizard 
+          onClose={() => setIsTrocaSetorOpen(false)}
+          onFinish={() => {
+            setIsTrocaSetorOpen(false);
+            loadColabs();
+          }}
+        />
+      )}
       <ModalNovoColaborador 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
