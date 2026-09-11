@@ -266,11 +266,33 @@ export function TratamentoFeriasWizard({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Último Aquisitivo (Fechamento)</label>
-              <input type="date" value={aquisitivo} onChange={e => setAquisitivo(e.target.value)} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
+              <input type="date" value={aquisitivo} onChange={e => {
+                const val = e.target.value;
+                setAquisitivo(val);
+                if (val) {
+                  const d = new Date(val + 'T12:00:00Z');
+                  const max = new Date(d); max.setDate(max.getDate() + 350);
+                  const inicio = new Date(max); inicio.setDate(inicio.getDate() - 45);
+                  const aviso = new Date(inicio); aviso.setDate(aviso.getDate() - 30);
+                  setVencimento(max.toISOString().split('T')[0]);
+                  setLimiteEntrada(inicio.toISOString().split('T')[0]);
+                  setNotificacao(aviso.toISOString().split('T')[0]);
+                }
+              }} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Limite Máximo p/ Tirar Férias</label>
-              <input type="date" value={vencimento} onChange={e => setVencimento(e.target.value)} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
+              <input type="date" value={vencimento} onChange={e => {
+                const val = e.target.value;
+                setVencimento(val);
+                if (val) {
+                  const max = new Date(val + 'T12:00:00Z');
+                  const inicio = new Date(max); inicio.setDate(inicio.getDate() - 45);
+                  const aviso = new Date(inicio); aviso.setDate(aviso.getDate() - 30);
+                  setLimiteEntrada(inicio.toISOString().split('T')[0]);
+                  setNotificacao(aviso.toISOString().split('T')[0]);
+                }
+              }} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Data Máx p/ Iniciar (Limite - 15d)</label>
