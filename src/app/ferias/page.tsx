@@ -246,11 +246,7 @@ export default function FeriasPage() {
           <h3 className="font-bold text-slate-800 flex items-center gap-2">
             <CalendarRange className="w-5 h-5 text-brand-cyan" /> Quadro Geral de Aquisitivos (Prazos Limites)
           </h3>
-          {canEditDatas && (
-              <button onClick={handleAutoCalcularTodas} className="bg-brand-cyan hover:bg-brand-teal text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow transition-colors">
-                Auto-Corrigir Datas (Massa)
-              </button>
-            )}
+          
             <input 
               type="text"
               placeholder="Buscar colaborador..."
