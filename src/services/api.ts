@@ -581,6 +581,15 @@ export const api = {
     }
   },
 
+  getPostos: async (): Promise<any[]> => {
+    try {
+      const res = await fetch(`${API_URL}/postos-de-trabalho`, { cache: 'no-store' });
+      if (!res.ok) return [];
+      return res.json();
+    } catch {
+      return [];
+    }
+  },
   getPostosParaAlocacao: async (colabId: string): Promise<PostoParaAlocacao[]> => {
     try {
       const res = await fetch(`${API_URL}/postos-de-trabalho/para-alocacao/${colabId}`, { cache: 'no-store' });
@@ -591,6 +600,18 @@ export const api = {
     }
   },
 
+  processarRemanejamento: async (payload: { movimentacoes: any[], livres: string[] }): Promise<boolean> => {
+    try {
+      const res = await fetch(`${API_URL}/alocacoes/remanejamento`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  },
   realizarAlocacaoManual: async (payload: { colabId: string, postoId: string, acao_ocupante_atual?: string }): Promise<boolean> => {
     try {
       const res = await fetch(`${API_URL}/alocacoes/manual`, {

@@ -232,6 +232,7 @@ export default function ColabsPage() {
   const canEditCadastral = ['ADMIN', 'RH', 'DP'].includes(userProfile.toUpperCase());
   const canEditContrato = ['ADMIN', 'RH', 'DP'].includes(userProfile.toUpperCase());
   const canEditRegime = ['ADMIN', 'RH'].includes(userProfile.toUpperCase());
+  const canTrocaSetor = ['ADMIN', 'COORDENADOR', 'COORDENADOR ADMINISTRATIVO', 'GERENTE', 'RH', 'DP'].includes(userProfile.toUpperCase());
   const canEditOcorrencia = ['ADMIN', 'GERENCIA', 'COORDENADOR', 'COORDENADOR ADMINISTRATIVO'].includes(userProfile.toUpperCase());
 
 
