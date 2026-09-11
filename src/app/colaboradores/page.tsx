@@ -115,6 +115,7 @@ export default function ColabsPage() {
   const [expandedTreinamento, setExpandedTreinamento] = useState<string | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTrocaSetorOpen, setIsTrocaSetorOpen] = useState(false);;
   const [isModalHistoricoOpen, setIsModalHistoricoOpen] = useState(false);
   const [historicoManual, setHistoricoManual] = useState({ tipo: 'Falta', data: '', sancao: 'Nenhuma', observacao: '' });
   const [userProfile, setUserProfile] = useState('');
