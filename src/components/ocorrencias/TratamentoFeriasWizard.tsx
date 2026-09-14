@@ -262,55 +262,9 @@ export function TratamentoFeriasWizard({
 
       
         <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 shadow-sm">
-          <p className="text-sm font-medium text-slate-700 mb-3 border-b border-slate-200 pb-2">Colaborador: <span className="font-bold">{colab.nome}</span></p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Último Aquisitivo (Fechamento)</label>
-              <input type="date" value={aquisitivo} onChange={e => {
-                const val = e.target.value;
-                setAquisitivo(val);
-                if (val) {
-                  const d = new Date(val + 'T12:00:00Z');
-                  const max = new Date(d); max.setDate(max.getDate() + 350);
-                  const inicio = new Date(max); inicio.setDate(inicio.getDate() - 45);
-                  const aviso = new Date(inicio); aviso.setDate(aviso.getDate() - 30);
-                  setVencimento(max.toISOString().split('T')[0]);
-                  setLimiteEntrada(inicio.toISOString().split('T')[0]);
-                  setNotificacao(aviso.toISOString().split('T')[0]);
-                }
-              }} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
-            </div>
-            <div>
-              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Limite Máximo p/ Tirar Férias</label>
-              <input type="date" value={vencimento} onChange={e => {
-                const val = e.target.value;
-                setVencimento(val);
-                if (val) {
-                  const max = new Date(val + 'T12:00:00Z');
-                  const inicio = new Date(max); inicio.setDate(inicio.getDate() - 45);
-                  const aviso = new Date(inicio); aviso.setDate(aviso.getDate() - 30);
-                  setLimiteEntrada(inicio.toISOString().split('T')[0]);
-                  setNotificacao(aviso.toISOString().split('T')[0]);
-                }
-              }} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
-            </div>
-            <div>
-              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Data Máx p/ Iniciar (Limite - 15d)</label>
-              <input type="date" value={limiteEntrada} onChange={e => setLimiteEntrada(e.target.value)} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
-            </div>
-            <div>
-              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Data Limite p/ Aviso (Entrada - 30d)</label>
-              <input type="date" value={notificacao} onChange={e => setNotificacao(e.target.value)} disabled={!canEditDatas} className="w-full p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-medium focus:outline-none focus:border-brand-teal text-sm disabled:bg-slate-100 disabled:text-slate-500" />
-            </div>
-          </div>
-          {canEditDatas && (
-            <div className="flex justify-end mt-3">
-              <button type="button" onClick={saveFeriasDatas} className="text-xs bg-brand-cyan text-white px-3 py-1.5 rounded-lg hover:bg-brand-teal transition-colors font-bold shadow-sm">Salvar Datas-Base</button>
-            </div>
-          )}
+          <p className="text-sm font-medium text-slate-700">Colaborador: <span className="font-bold">{colab.nome}</span></p>
         </div>
-
-
+  
       {step === 'AVISO' && (
         <form onSubmit={handleCriarAviso} className="flex flex-col gap-4">
           <div>

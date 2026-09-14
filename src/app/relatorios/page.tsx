@@ -232,22 +232,11 @@ export default function RelatoriosPage() {
                       <div>
                         <h4 className={`font-black text-lg ${f.status === 'AÇÃO IMEDIATA' ? 'text-red-800' : f.status === 'ATRASADA' ? 'text-orange-800' : 'text-amber-800'}`}>{f.colabNome}</h4>
                         <p className="text-xs text-slate-500">Base: {f.dataBase}</p>
-                      </div>
-                      <span className={`px-2.5 py-1 rounded-lg text-xs font-black tracking-wider uppercase ${
-                        f.status === 'AÇÃO IMEDIATA' ? 'bg-red-600 text-white shadow-lg shadow-red-500/30' : 
-                        f.status === 'ATRASADA' ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' : 
-                        'bg-amber-400 text-amber-900'
-                      }`}>
-                        {f.status}
-                      </span>
-                    </div>
-                    
-                    <div className="flex justify-between items-center bg-white/50 rounded-lg p-3 backdrop-blur-sm border border-white/20">
-                      <div>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Prazo Fatal</p>
-                        <p className="font-medium text-slate-800">{f.dataLimite}</p>
-                      </div>
-                      <div className="text-right">
+                          <p className="text-xs font-semibold text-slate-700 mt-1">
+                            Limite Aviso: {f.dataLimiteAviso}
+                          </p>
+                        </div>
+                        <div className="text-right">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Tempo Restante</p>
                         <p className={`font-black text-lg ${f.diasRestantes < 0 ? 'text-red-600' : 'text-slate-800'}`}>
                           {f.diasRestantes < 0 ? `Atrasado ${Math.abs(f.diasRestantes)} dias` : `${f.diasRestantes} dias`}
