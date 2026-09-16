@@ -11,6 +11,8 @@ export function TrocaSetorWizard({ onClose, onFinish }: TrocaSetorWizardProps) {
   const [step, setStep] = useState(1);
   const [colaboradores, setColaboradores] = useState<any[]>([]);
   const [postos, setPostos] = useState<any[]>([]);
+  const [clientes, setClientes] = useState<any[]>([]);
+  const [clienteSelecionado, setClienteSelecionado] = useState<string>("");
   const [alocacoes, setAlocacoes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,14 +28,16 @@ export function TrocaSetorWizard({ onClose, onFinish }: TrocaSetorWizardProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [cData, pData, aData] = await Promise.all([
+        const [cData, pData, aData, clData] = await Promise.all([
           api.getColabs(),
           api.getPostos(),
-          api.getAlocacoes()
+          api.getAlocacoes(),
+          api.getClientes()
         ]);
         setColaboradores(cData.filter((c: any) => c.status_cadastro !== 'Inativo'));
         setPostos(pData);
         setAlocacoes(aData);
+        setClientes(clData);
       } catch (e) {
         console.error(e);
       } finally {
