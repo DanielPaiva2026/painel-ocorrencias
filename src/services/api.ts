@@ -213,7 +213,7 @@ export type DashboardStats = {
       resolvidas: number;
     }
   };
-  pendenciasFerias?: any[];
+  avisosFerias?: any[];
   alertasTransferencia?: any[];
   avisosRetorno?: any[];
   colaboradoresEmFerias?: any[];
@@ -624,6 +624,40 @@ export const api = {
       console.error(error);
       return false;
     }
+  },
+
+  deleteAvisoFerias: async (id: string): Promise<boolean> => {
+    const res = await fetch(`${API_URL}/ferias/aviso/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+    });
+    return res.ok;
+  },
+
+  updateAvisoFerias: async (id: string, data: { data_aviso?: string, dias_ferias?: number }): Promise<boolean> => {
+    const res = await fetch(`${API_URL}/ferias/aviso/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+      body: JSON.stringify(data)
+    });
+    return res.ok;
+  },
+
+  confirmarCobertura: async (id: string): Promise<boolean> => {
+    const res = await fetch(`${API_URL}/ferias/cobertura/${id}/confirmar`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+    });
+    return res.ok;
+  },
+
+  trocarCobertura: async (id: string, novoSubstitutoId: string): Promise<boolean> => {
+    const res = await fetch(`${API_URL}/ferias/cobertura/${id}/trocar`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+      body: JSON.stringify({ colab_substituto_id: novoSubstitutoId })
+    });
+    return res.ok;
   },
 
   createAvisoFerias: async (data: { colab_id: string, data_aviso: string, dias_ferias: number, dias_venda: number }): Promise<any> => {

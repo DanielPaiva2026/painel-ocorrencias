@@ -179,36 +179,57 @@ export default function FeriasPage() {
         </div>
       </div>
 
-      {stats?.pendenciasFerias && stats.pendenciasFerias.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 animate-in fade-in slide-in-from-top-4">
-          <h2 className="text-amber-800 font-bold text-lg flex items-center gap-2 mb-3">
-            <AlertCircle className="w-5 h-5" /> Avisos Pendentes de Assinatura
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {stats.pendenciasFerias.map((aviso: any) => {
-              const dataAvisoStr = new Date(aviso.data_aviso).toLocaleDateString('pt-BR');
-              return (
-                <div key={aviso.id} className="bg-white p-4 rounded-xl border border-amber-100 shadow-sm flex flex-col gap-2">
-                   <div className="flex justify-between items-start">
-                      <div>
-                        <p className="font-bold text-slate-800">{aviso.colab?.nome}</p>
-                        <p className="text-xs font-semibold text-amber-600 mt-0.5">Aviso gerado em {dataAvisoStr}</p>
-                      </div>
-                   </div>
-                   <p className="text-xs text-slate-600 mt-1">
-                     Dias: {aviso.dias_ferias} {aviso.dias_venda > 0 ? `(Vendeu ${aviso.dias_venda})` : ''}
-                   </p>
-                   <div className="flex justify-end mt-2">
-                     <button onClick={() => handleAnexarDoc(aviso.id)} className="text-xs font-medium bg-brand-cyan text-white px-3 py-1.5 rounded-lg hover:bg-brand-teal transition-colors">
-                       Anexar PDF
-                     </button>
-                   </div>
-                </div>
-              );
-            })}
+      {stats?.avisosFerias && stats.avisosFerias.length > 0 && (
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 animate-in fade-in slide-in-from-top-4 mb-6">
+            <h2 className="text-slate-800 font-bold text-lg flex items-center gap-2 mb-3">
+              <AlertCircle className="w-5 h-5 text-brand-cyan" /> Agendamentos e Avisos de Férias
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {stats.avisosFerias.map((aviso: any) => {
+                const dataAvisoStr = new Date(aviso.data_aviso).toLocaleDateString('pt-BR');
+                const dataInicioStr = new Date(aviso.data_inicio).toLocaleDateString('pt-BR');
+                return (
+                  <div key={aviso.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2 relative">
+                     <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-bold text-slate-800">{aviso.colab?.nome}</p>
+                          <p className="text-xs font-semibold text-slate-500 mt-0.5">Início: {dataInicioStr}</p>
+                        </div>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${aviso.status === 'AGUARDANDO_ASSINATURA' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                          {aviso.status === 'AGUARDANDO_ASSINATURA' ? 'Pendente' : 'Assinado'}
+                        </span>
+                     </div>
+                     <p className="text-xs text-slate-600 mt-1">
+                       Dias: {aviso.dias_ferias} {aviso.dias_venda > 0 ? `(Vendeu ${aviso.dias_venda})` : ''}
+                     </p>
+                     <div className="flex justify-end mt-2 gap-2">
+                       {aviso.status === 'AGUARDANDO_ASSINATURA' && (
+                         <button onClick={() => handleAnexarDoc(aviso.id)} className="text-xs font-medium bg-brand-cyan text-white px-2 py-1 rounded-md hover:bg-brand-teal transition-colors">
+                           Anexar PDF
+                         </button>
+                       )}
+                       <button onClick={() => {
+                          const novaData = prompt('Nova data do aviso (AAAA-MM-DD):', aviso.data_aviso.split('T')[0]);
+                          if(novaData) {
+                            api.updateAvisoFerias(aviso.id, { data_aviso: novaData }).then(() => loadData());
+                          }
+                       }} className="text-xs font-medium bg-slate-100 text-slate-600 px-2 py-1 rounded-md hover:bg-slate-200 transition-colors">
+                         Editar
+                       </button>
+                       <button onClick={() => {
+                          if(confirm('Tem certeza que deseja excluir este agendamento/aviso?')) {
+                            api.deleteAvisoFerias(aviso.id).then(() => loadData());
+                          }
+                       }} className="text-xs font-medium bg-rose-50 text-rose-600 px-2 py-1 rounded-md hover:bg-rose-100 transition-colors">
+                         Excluir
+                       </button>
+                     </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {stats?.alertasTransferencia && stats.alertasTransferencia.length > 0 && (
         <div className="bg-rose-50 border border-rose-200 rounded-2xl p-5 animate-in fade-in slide-in-from-top-4">
