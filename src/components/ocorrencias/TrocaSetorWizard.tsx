@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { Users, Briefcase, ArrowRight, CheckCircle2, UserX } from 'lucide-react';
 
@@ -176,16 +176,31 @@ export function TrocaSetorWizard({ onClose, onFinish }: TrocaSetorWizardProps) {
           {step === 2 && (
             <div className="space-y-4">
               <h3 className="font-bold text-lg">2. Para qual posto {colabOrigem?.nome} irá?</h3>
-              <p className="text-sm text-slate-500">Selecione o novo posto de trabalho.</p>
+              <p className="text-sm text-slate-500">Selecione o Cliente e depois o novo posto de trabalho.</p>
               
               <select 
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-brand-cyan"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-brand-cyan mb-4"
+                value={clienteSelecionado}
+                onChange={e => {
+                  setClienteSelecionado(e.target.value);
+                  setPostoDestino(null);
+                }}
+              >
+                <option value="">1. Selecione um Cliente...</option>
+                {clientes.map(c => (
+                  <option key={c.id} value={c.id}>{c.nome_razao}</option>
+                ))}
+              </select>
+
+              <select 
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-brand-cyan disabled:bg-slate-100 disabled:opacity-50"
                 value={postoDestino?.id || ""}
                 onChange={e => handleSelectPosto(e.target.value)}
+                disabled={!clienteSelecionado}
               >
-                <option value="">Selecione um posto...</option>
-                {postos.map(p => (
-                  <option key={p.id} value={p.id}>{p.nome}</option>
+                <option value="">2. Selecione um posto...</option>
+                {postos.filter(p => p.cliente_id === clienteSelecionado).map(p => (
+                  <option key={p.id} value={p.id}>{p.codigo} {p.descricao_escala ? ` - ${p.descricao_escala}` : ''}</option>
                 ))}
               </select>
 
