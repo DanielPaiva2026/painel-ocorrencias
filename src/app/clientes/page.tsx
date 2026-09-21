@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import { api, Cliente } from '@/services/api';
 import ModalUploadContrato from '@/components/ModalUploadContrato';
+import ModalCreateCliente from '@/components/clientes/ModalCreateCliente';
+import ModalEditPosto from '@/components/clientes/ModalEditPosto';
+import { PostoDeTrabalho } from '@/services/api';
 import { parsePostoTurnoCategoria, parseTipoEscala } from '@/lib/postoUtils';
 
 export default function ClientesPage() {
@@ -20,6 +23,20 @@ export default function ClientesPage() {
   const [editClienteData, setEditClienteData] = useState<Partial<Cliente>>({});
   const [isSavingCliente, setIsSavingCliente] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [mostrarInativos, setMostrarInativos] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditPostoOpen, setIsEditPostoOpen] = useState(false);
+  const [selectedPostoForEdit, setSelectedPostoForEdit] = useState<PostoDeTrabalho | undefined>(undefined);
+
+  const reloadData = async () => {
+    const data = await api.getClientes();
+    setClientes(data);
+    if (selectedCliente) {
+       const updated = data.find((c: Cliente) => c.id === selectedCliente.id);
+       if (updated) setSelectedCliente(updated);
+    }
+  };
+
 
   useEffect(() => {
     setUserProfile(localStorage.getItem('auth_role') || '');
@@ -563,7 +580,7 @@ export default function ClientesPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Clientes Ativos</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">{mostrarInativos ? "Clientes Inativos" : "Clientes"}</h1>
           <p className="text-slate-500 text-sm mt-1">Busque, visualize e gerencie seus clientes.</p>
         </div>
         <div className="flex gap-3">

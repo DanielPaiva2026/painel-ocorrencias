@@ -74,6 +74,10 @@ export type PostoDeTrabalho = {
   exige_nr32?: boolean;
   exige_nr35?: boolean;
   data_base_escala_12x36?: string;
+  status?: string;
+  tipo_cobertura?: string;
+  par_impar?: string;
+  cobertura_de?: string;
   alocacoes?: Alocacao[];
   cliente?: Cliente;
 };
@@ -325,6 +329,37 @@ export const api = {
   getClientes: async (): Promise<Cliente[]> => {
     const res = await fetch(`${API_URL}/clientes`);
     if (!res.ok) throw new Error('Falha ao buscar clientes');
+    return res.json();
+  },
+
+  
+  createClienteManual: async (data: any) => {
+    const res = await fetch(`${API_URL}/clientes/manual`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw await res.json();
+    return res.json();
+  },
+
+  createPostoManual: async (clienteId: string, data: any) => {
+    const res = await fetch(`${API_URL}/clientes/${clienteId}/postos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw await res.json();
+    return res.json();
+  },
+
+  updatePosto: async (id: string, data: any) => {
+    const res = await fetch(`${API_URL}/clientes/postos/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw await res.json();
     return res.json();
   },
 
