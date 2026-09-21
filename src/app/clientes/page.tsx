@@ -9,6 +9,8 @@ export default function ClientesPage() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
   const [buscaNome, setBuscaNome] = useState('');
+  const [ordenacao, setOrdenacao] = useState<'nome' | 'codigo'>('nome');
+  const [filtroEmpresa, setFiltroEmpresa] = useState<'Todas' | 'MC' | 'FC'>('Todas');
   
   const [selectedCliente, setSelectedCliente] = useState<Cliente | null>(null);
   const [expandedSection, setExpandedSection] = useState<'basico' | 'contato' | 'operacional' | 'postos' | null>('basico');
