@@ -50,7 +50,11 @@ export default function ClientesPage() {
 
   // Filtra clientes ativos e busca por nome ou código
   let filteredClientes = clientes.filter(cli => {
-    if (cli.status !== 'Ativo') return false; // Apenas Ativos na listagem, como pedido
+    if (mostrarInativos) {
+      if (cli.status === 'Ativo') return false; 
+    } else {
+      if (cli.status !== 'Ativo') return false;
+    }
     
     const matchesBusca = cli.nome_razao.toLowerCase().includes(buscaNome.toLowerCase()) ||
            (cli.codigo && cli.codigo.toLowerCase().includes(buscaNome.toLowerCase()));
@@ -722,6 +726,17 @@ export default function ClientesPage() {
           }} 
         />
       )}
+      {isCreateModalOpen && (
+        <ModalCreateCliente 
+          onClose={() => setIsCreateModalOpen(false)}
+          onSuccess={() => {
+            setIsCreateModalOpen(false);
+            reloadData();
+          }}
+        />
+      )}
+
+
     </div>
   );
 }
