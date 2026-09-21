@@ -408,6 +408,20 @@ export default function ClientesPage() {
             </button>
             {expandedSection === 'postos' && (
               <div className="p-6 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-bold text-slate-800">Gerenciar Postos</h3>
+                  {['ADMIN', 'GERENCIA', 'RH', 'TEC_SEGURANCA'].includes(userProfile) && (
+                    <button
+                      onClick={() => {
+                        setSelectedPostoForEdit(undefined);
+                        setIsEditPostoOpen(true);
+                      }}
+                      className="bg-brand-teal hover:bg-brand-teal/90 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-colors text-sm"
+                    >
+                      + Adicionar Posto
+                    </button>
+                  )}
+                </div>
                 {selectedCliente.postos_de_trabalho && selectedCliente.postos_de_trabalho.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {selectedCliente.postos_de_trabalho.map(posto => (
@@ -418,19 +432,21 @@ export default function ClientesPage() {
                             <span className="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
                               {posto.turno || parsePostoTurnoCategoria(posto.codigo).turno}
                             </span>
+                            {posto.status === 'Inativo' && (
+                              <span className="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                                Inativo
+                              </span>
+                            )}
+                            {posto.cobertura_de !== 'NENHUMA' && posto.cobertura_de != null && (
+                              <span className="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                                COBERTURA
+                              </span>
+                            )}
                             {['ADMIN', 'GERENCIA', 'RH', 'TEC_SEGURANCA'].includes(userProfile) && (
                               <button 
                                 onClick={() => {
-                                  setEditingPostoId(posto.id);
-                                  setEditPostoData({
-                                    exige_nr32: posto.exige_nr32,
-                                    exige_nr35: posto.exige_nr35,
-                                    horas_diarias: posto.horas_diarias,
-                                    categoria_posto: posto.categoria_posto || parsePostoTurnoCategoria(posto.codigo).funcao,
-                                    data_base_escala_12x36: posto.data_base_escala_12x36 || '',
-                                    tipo_escala: posto.tipo_escala || '',
-                                    descricao_escala: posto.descricao_escala || ''
-                                  });
+                                  setSelectedPostoForEdit(posto);
+                                  setIsEditPostoOpen(true);
                                 }}
                                 className="text-brand-cyan hover:text-brand-teal text-xs font-semibold px-2 py-0.5 border border-brand-cyan/20 rounded"
                               >
@@ -585,13 +601,22 @@ export default function ClientesPage() {
         </div>
         <div className="flex gap-3">
           {['ADMIN', 'GERENCIA', 'RH', 'TEC_SEGURANCA'].includes(userProfile) && (
-            <button 
-              onClick={() => setIsUploadModalOpen(true)}
-              className="bg-brand-dark hover:bg-slate-800 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
-              Novo Cliente via Contrato (PDF)
-            </button>
+            <>
+              <button 
+                onClick={() => setIsCreateModalOpen(true)}
+                className="bg-brand-teal hover:bg-brand-teal/90 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
+                Novo Cliente Manual
+              </button>
+              <button 
+                onClick={() => setIsUploadModalOpen(true)}
+                className="bg-brand-dark hover:bg-slate-800 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                Upload PDF
+              </button>
+            </>
           )}
           <div className="bg-brand-teal/10 text-brand-teal px-4 py-2 rounded-xl font-bold flex gap-2 items-center">
             Total: <span>{filteredClientes.length}</span>
@@ -631,6 +656,12 @@ export default function ClientesPage() {
               <option value="MC">MC (Machado)</option>
               <option value="FC">FC (Falcão)</option>
             </select>
+            <button
+              onClick={() => setMostrarInativos(!mostrarInativos)}
+              className={`px-4 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all ${mostrarInativos ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-slate-50 text-slate-500 border border-slate-200 hover:bg-slate-100'}`}
+            >
+              {mostrarInativos ? 'Ocultar Inativos' : 'Mostrar Inativos'}
+            </button>
           </div>
         </div>
 
