@@ -32,11 +32,28 @@ export default function ClientesPage() {
   }, []);
 
   // Filtra clientes ativos e busca por nome ou código
-  const filteredClientes = clientes.filter(cli => {
+  let filteredClientes = clientes.filter(cli => {
     if (cli.status !== 'Ativo') return false; // Apenas Ativos na listagem, como pedido
     
-    return cli.nome_razao.toLowerCase().includes(buscaNome.toLowerCase()) ||
+    const matchesBusca = cli.nome_razao.toLowerCase().includes(buscaNome.toLowerCase()) ||
            (cli.codigo && cli.codigo.toLowerCase().includes(buscaNome.toLowerCase()));
+           
+    if (!matchesBusca) return false;
+
+    if (filtroEmpresa === 'MC' && !cli.codigo?.toUpperCase().startsWith('MC')) return false;
+    if (filtroEmpresa === 'FC' && !cli.codigo?.toUpperCase().startsWith('FC')) return false;
+
+    return true;
+  });
+
+  filteredClientes = filteredClientes.sort((a, b) => {
+    if (ordenacao === 'nome') {
+      return a.nome_razao.localeCompare(b.nome_razao);
+    } else {
+      const codA = a.codigo || '';
+      const codB = b.codigo || '';
+      return codA.localeCompare(codB);
+    }
   });
 
   if (loading) {
@@ -566,15 +583,38 @@ export default function ClientesPage() {
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-6">
-        <div className="flex items-center bg-slate-50 rounded-xl px-4 py-3 border border-slate-200 focus-within:border-brand-teal focus-within:ring-2 focus-within:ring-brand-teal/20 transition-all">
-          <svg className="w-5 h-5 text-slate-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <input 
-            type="text" 
-            placeholder="Buscar cliente por nome ou código..." 
-            className="bg-transparent border-none outline-none w-full text-slate-700 font-medium placeholder-slate-400"
-            value={buscaNome}
-            onChange={(e) => setBuscaNome(e.target.value)}
-          />
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 flex items-center bg-slate-50 rounded-xl px-4 py-3 border border-slate-200 focus-within:border-brand-teal focus-within:ring-2 focus-within:ring-brand-teal/20 transition-all">
+            <svg className="w-5 h-5 text-slate-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input 
+              type="text" 
+              placeholder="Buscar cliente por nome ou código..." 
+              className="bg-transparent border-none outline-none w-full text-slate-700 font-medium placeholder-slate-400"
+              value={buscaNome}
+              onChange={(e) => setBuscaNome(e.target.value)}
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <select
+              className="bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-xl px-4 py-3 outline-none focus:border-brand-teal"
+              value={ordenacao}
+              onChange={(e) => setOrdenacao(e.target.value as 'nome' | 'codigo')}
+            >
+              <option value="nome">Ordenar por Nome</option>
+              <option value="codigo">Ordenar por Código</option>
+            </select>
+
+            <select
+              className="bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-xl px-4 py-3 outline-none focus:border-brand-teal"
+              value={filtroEmpresa}
+              onChange={(e) => setFiltroEmpresa(e.target.value as 'Todas' | 'MC' | 'FC')}
+            >
+              <option value="Todas">Todas Empresas</option>
+              <option value="MC">MC (Machado)</option>
+              <option value="FC">FC (Falcão)</option>
+            </select>
+          </div>
         </div>
 
         <div className="space-y-3">
