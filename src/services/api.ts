@@ -843,19 +843,19 @@ export const api = {
   // ===============================
 
   getRelatorioVencimentos: async (): Promise<any[]> => {
-    const res = await fetch(`${API_URL}/relatorios/vencimentos`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` } });
+    const res = await fetch(`${API_URL}/relatorios/vencimentos`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }, cache: 'no-store' });
     if (!res.ok) throw new Error('Falha ao buscar alertas de vencimentos');
     return res.json();
   },
 
   getRelatorioFerias: async (): Promise<any> => {
-    const res = await fetch(`${API_URL}/relatorios/ferias`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` } });
+    const res = await fetch(`${API_URL}/relatorios/ferias`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }, cache: 'no-store' });
     if (!res.ok) throw new Error('Falha ao buscar alertas de férias');
     return res.json();
   },
 
   getRelatorioInconsistencias: async (): Promise<any[]> => {
-    const res = await fetch(`${API_URL}/relatorios/inconsistencias`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` } });
+    const res = await fetch(`${API_URL}/relatorios/inconsistencias`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }, cache: 'no-store' });
     if (!res.ok) throw new Error('Falha ao buscar inconsistências');
     return res.json();
   },
