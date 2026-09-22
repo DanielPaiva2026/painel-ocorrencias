@@ -137,6 +137,7 @@ export default function ClientesPage() {
     }
 
     return (
+      <>
       <div className="space-y-6 max-w-5xl mx-auto">
         <button 
           onClick={() => {
@@ -595,6 +596,23 @@ export default function ClientesPage() {
 
         </div>
       </div>
+      
+      {isEditPostoOpen && (
+        <ModalEditPosto 
+          clienteId={selectedCliente.id}
+          posto={selectedPostoForEdit}
+          onClose={() => {
+            setIsEditPostoOpen(false);
+            setSelectedPostoForEdit(undefined);
+          }}
+          onSuccess={() => {
+            setIsEditPostoOpen(false);
+            setSelectedPostoForEdit(undefined);
+            reloadData();
+          }}
+        />
+      )}
+      </>
     );
   }
 
