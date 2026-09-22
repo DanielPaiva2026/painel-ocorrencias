@@ -24,6 +24,7 @@ export default function ClientesPage() {
   const [isSavingCliente, setIsSavingCliente] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [mostrarInativos, setMostrarInativos] = useState(false);
+  const [mostrarPostosInativos, setMostrarPostosInativos] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditPostoOpen, setIsEditPostoOpen] = useState(false);
   const [selectedPostoForEdit, setSelectedPostoForEdit] = useState<PostoDeTrabalho | undefined>(undefined);
@@ -413,7 +414,9 @@ export default function ClientesPage() {
             {expandedSection === 'postos' && (
               <div className="p-6 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-bold text-slate-800">Gerenciar Postos</h3>
+                  <div className="flex items-center gap-4"><h3 className="text-lg font-bold text-slate-800">Gerenciar Postos</h3>
+<button onClick={() => setMostrarPostosInativos(!mostrarPostosInativos)} className={`text-xs font-bold px-3 py-1.5 rounded-lg border ${mostrarPostosInativos ? 'bg-red-50 text-red-600 border-red-200' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100'}`}>{mostrarPostosInativos ? 'Ocultar Inativos' : 'Mostrar Inativos'}</button>
+</div>
                   {['ADMIN', 'GERENCIA', 'RH', 'TEC_SEGURANCA'].includes(userProfile) && (
                     <button
                       onClick={() => {
@@ -428,7 +431,7 @@ export default function ClientesPage() {
                 </div>
                 {selectedCliente.postos_de_trabalho && selectedCliente.postos_de_trabalho.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {selectedCliente.postos_de_trabalho.map(posto => (
+                    {selectedCliente.postos_de_trabalho.filter(p => mostrarPostosInativos ? p.status === 'Inativo' : p.status !== 'Inativo').map(posto => (
                       <div key={posto.id} className="border border-slate-200 rounded-xl p-4 bg-white hover:border-brand-cyan transition-colors">
                         <div className="flex justify-between items-start mb-2">
                           <h4 className="font-bold text-slate-800 text-md">{posto.codigo}</h4>
