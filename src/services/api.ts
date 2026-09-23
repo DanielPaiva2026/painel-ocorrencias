@@ -69,6 +69,7 @@ export type PostoDeTrabalho = {
   categoria_posto: string | null;
   turno: string | null;
   tipo_escala: string | null;
+  funcao?: string | null;
   descricao_escala: string | null;
   horas_diarias: string | null;
   exige_nr32?: boolean;
