@@ -8,11 +8,14 @@ const outfit = Outfit({
   variable: '--font-outfit',
 });
 
+export const viewport = {
+  themeColor: "#0f766e",
+};
+
 export const metadata: Metadata = {
   title: 'AlpiSerra - Painel de Ocorrências',
   description: 'Sistema integrado de Serviços Terceirizados',
   manifest: "/manifest.json",
-  themeColor: "#0f766e",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
